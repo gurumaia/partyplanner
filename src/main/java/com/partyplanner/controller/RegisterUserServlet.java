@@ -71,7 +71,7 @@ public class RegisterUserServlet extends HttpServlet {
 			 */
 			logger.debug("Processing RegisterUserServlet.");
 			parseInput(request);
-			// test Branch
+			// test Branch 2
 			out.println(birthDate);
 //			out.println(birthDate.toString());
 //			user.registerUser("mimi", firstName, lastName, email, password, null, Boolean.TRUE, Boolean.TRUE);
