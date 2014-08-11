@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<jsp-file>/WEB-INF/html/login.html</jsp-file>
+	</servlet>
+	<servlet>
+		<servlet-name>LoginError</servlet-name>
+		<jsp-file>/WEB-INF/html/loginError.html</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/Login</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LoginError</servlet-name>
+		<url-pattern>/LoginError</url-pattern>
+	</servlet-mapping>
+	<jsp-config> 
+		<jsp-property-group> 
+			<url-pattern>*.jsp</url-pattern> 
+			<include-prelude>/WEB-INF/jspf/header.jspf</include-prelude> 
+			<include-coda>/WEB-INF/jspf/footer.jspf</include-coda> 
+		</jsp-property-group>
+	</jsp-config>
+	<session-config>
+		<session-timeout>
+			30
+		</session-timeout>
+	</session-config>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>PPAuth</realm-name>
+		<form-login-config>
+			<form-login-page>/Login</form-login-page>
+			<form-error-page>/LoginError</form-error-page>
+		</form-login-config>
+	</login-config>
+	<security-role>
+		<description>General user</description>
+		<role-name>user</role-name>
+	</security-role>
+</web-app>
