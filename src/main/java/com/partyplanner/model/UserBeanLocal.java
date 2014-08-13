@@ -16,6 +16,11 @@ import javax.ejb.Local;
 @Local
 public interface UserBeanLocal {
 
+	int getId(final String email);
 	String getFirstName(final String email);
-	Boolean registerUser(final String nickname, final String firstName, final String lastName, final String email, final String password, final Date birthDate, final Boolean gender, final Boolean optin);
+	boolean registerUser(final String nickname, final String firstName, final String lastName, final String email, final String password, final Date birthDate, final Boolean gender, final Boolean optin);
+	boolean isUserRegistered(final String email);
+	boolean isNicknameTaken(final String nickname);
+	
 }
+

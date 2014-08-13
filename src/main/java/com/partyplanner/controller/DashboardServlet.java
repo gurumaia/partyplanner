@@ -37,9 +37,6 @@ public class DashboardServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
-			/* TODO output your page here. You may use following sample code. */
-//			out.println(request.getParameterMap());
-			out.println(request.getParameter("b"));
 			request.getRequestDispatcher("/WEB-INF/view/dashboard.jsp").include(request, response);
 		}
 	}

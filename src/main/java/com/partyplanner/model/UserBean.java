@@ -6,8 +6,11 @@
 
 package com.partyplanner.model;
 
+import com.partyplanner.persistence.UserEntity;
 import java.util.Date;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -15,6 +18,8 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class UserBean implements UserBeanLocal {
+	@PersistenceContext
+	private EntityManager em;
 	
 	// Add business logic below. (Right-click in editor and choose
 	// "Insert Code > Add Business Method")
@@ -27,15 +32,20 @@ public class UserBean implements UserBeanLocal {
 	
 	@Override
 	public String getFirstName(final String email) {
-		
-//		return ue.getFirstName();
-		return "mimimiaaaa";
+		UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
+		return u.getFirstName();
+	}
+
+	@Override
+	public int getId(final String email) {
+		UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
+		return u.getId();
 	}
 	
 	
 	
 	@Override
-	public Boolean registerUser(final String nickname, 
+	public boolean registerUser(final String nickname, 
 								final String firstName, 
 								final String lastName, 
 								final String email, 
@@ -45,6 +55,28 @@ public class UserBean implements UserBeanLocal {
 								final Boolean optin) {
 		
 		
+		return true;
+	}
+
+	@Override
+	public boolean isUserRegistered(String email) {
+		try {
+			UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
+		}
+		catch (javax.persistence.NoResultException e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isNicknameTaken(String nickname) {
+		try {
+//			UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
+		}
+		catch (javax.persistence.NoResultException e) {
+			return false;
+		}
 		return true;
 	}
 }

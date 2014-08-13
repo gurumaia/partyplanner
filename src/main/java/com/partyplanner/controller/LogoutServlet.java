@@ -37,7 +37,6 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
-			/* TODO output your page here. You may use following sample code. */
 			request.logout();
 			response.sendRedirect("/PartyPlanner/");
 		}

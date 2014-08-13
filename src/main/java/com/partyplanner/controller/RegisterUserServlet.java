@@ -71,14 +71,26 @@ public class RegisterUserServlet extends HttpServlet {
 			 */
 			logger.debug("Processing RegisterUserServlet.");
 			parseInput(request);
+			
+			if(user.isUserRegistered(email))
+			{
+				logger.info((new StringBuilder()).append("E-mail address (").append(email).append(") is already in use.").toString());
+				messages.put("email", "This e-mail address is already in use.");
+			}
+			if(!messages.isEmpty())
+			{
+				logger.info((new StringBuilder()).append("Validation errors on registration for user: ").append(nickname).toString());
+				messages.put("alert", "Please correct the fields below:");
+				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(request, response);
+			}
 			// test Branch
-			out.println(birthDate);
 //			out.println(birthDate.toString());
 //			user.registerUser("mimi", firstName, lastName, email, password, null, Boolean.TRUE, Boolean.TRUE);
 			
 			
 //			out.println(user.getFirstName((String) request.getAttribute("email")));
-			messages.put("alert", "aaa");
+			messages.put("alert", "REGISTER USER");
+			user.registerUser("mimi", firstName, lastName, email, password, null, Boolean.TRUE, Boolean.TRUE);
 			request.getRequestDispatcher("/WEB-INF/view/registration.jsp").include(request, response);
 			
 		}
