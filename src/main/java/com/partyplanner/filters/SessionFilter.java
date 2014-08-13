@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -34,7 +36,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 @WebFilter(filterName = "SessionFilter", urlPatterns = {"/*"})
 public class SessionFilter implements Filter {
 	
-	private static final boolean debug = false;
+	private static final Logger logger = LogManager.getLogger(SessionFilter.class.getName());
 
 	// The filter configuration object we are associated with.  If
 	// this value is null, this filter instance is not currently
@@ -46,86 +48,18 @@ public class SessionFilter implements Filter {
 	
 	private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-		if (debug) {
-			log("SessionFilter:DoBeforeProcessing");
-		}
+		logger.debug("SessionFilter:DoBeforeProcessing");
 		
 		Boolean loggedIn;
 		loggedIn = (request.getRemoteUser() != null);
 		request.setAttribute("loggedIn",loggedIn);
 
-	// Write code here to process the request and/or response before
-		// the rest of the filter chain is invoked.
-	// For example, a filter that implements setParameter() on a request
-		// wrapper could set parameters on the request before passing it on
-		// to the filter chain.
-	/*
-		 String [] valsOne = {"val1a", "val1b"};
-		 String [] valsTwo = {"val2a", "val2b", "val2c"};
-		 request.setParameter("name1", valsOne);
-		 request.setParameter("nameTwo", valsTwo);
-		 */
-	// For example, a logging filter might log items on the request object,
-		// such as the parameters.
-	/*
-		 for (Enumeration en = request.getParameterNames(); en.hasMoreElements(); ) {
-		 String name = (String)en.nextElement();
-		 String values[] = request.getParameterValues(name);
-		 int n = values.length;
-		 StringBuffer buf = new StringBuffer();
-		 buf.append(name);
-		 buf.append("=");
-		 for(int i=0; i < n; i++) {
-		 buf.append(values[i]);
-		 if (i < n-1)
-		 buf.append(",");
-		 }
-		 log(buf.toString());
-		 }
-		 */
 	}	
 	
 	private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-		if (debug) {
-			log("SessionFilter:DoAfterProcessing");
-		}
-
-	// Write code here to process the request and/or response after
-		// the rest of the filter chain is invoked.
-	// For example, a logging filter might log the attributes on the
-		// request object after the request has been processed. 
-	/*
-		 for (Enumeration en = request.getAttributeNames(); en.hasMoreElements(); ) {
-		 String name = (String)en.nextElement();
-		 Object value = request.getAttribute(name);
-		 log("attribute: " + name + "=" + value.toString());
-
-		 }
-		 */
-	// For example, a filter might append something to the response.
-	/*
-		 PrintWriter respOut = new PrintWriter(response.getWriter());
-		 respOut.println("<p><strong>This has been appended by an intrusive filter.</strong></p>");
-	
-		 respOut.println("<p>Params (after the filter chain):<br>");
-		 for (Enumeration en = request.getParameterNames(); en.hasMoreElements(); ) {
-		 String name = (String)en.nextElement();
-		 String values[] = request.getParameterValues(name);
-		 int n = values.length;
-		 StringBuffer buf = new StringBuffer();
-		 buf.append(name);
-		 buf.append("=");
-		 for(int i=0; i < n; i++) {
-		 buf.append(values[i]);
-		 if (i < n-1)
-		 buf.append(",");
-		 }
-		 log(buf.toString());
-		 respOut.println(buf.toString() + "<br>");
-		 }
-		 respOut.println("</p>");
-		 */
+//		logger.debug("SessionFilter:DoAfterProcessing");
+		
 	}
 
 	/**
@@ -140,10 +74,9 @@ public class SessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain)
 			throws IOException, ServletException {
+		logger.debug("SessionFilter:doFilter()");
 		
-		if (debug) {
-			log("SessionFilter:doFilter()");
-		}
+		
 
 	// Create wrappers for the request and response objects.
 		// Using these, you can extend the capabilities of the
@@ -213,9 +146,7 @@ public class SessionFilter implements Filter {
 	public void init(FilterConfig filterConfig) {		
 		this.filterConfig = filterConfig;
 		if (filterConfig != null) {
-			if (debug) {				
-				log("SessionFilter: Initializing filter");
-			}
+			logger.debug("SessionFilter: Initializing filter");
 		}
 	}
 
@@ -301,9 +232,7 @@ public class SessionFilter implements Filter {
 		protected Hashtable localParams = null;
 		
 		public void setParameter(String name, String[] values) {
-			if (debug) {
-				System.out.println("SessionFilter::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
-			}
+			logger.debug("SessionFilter::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
 			
 			if (localParams == null) {
 				localParams = new Hashtable();
@@ -321,9 +250,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public String getParameter(String name) {
-			if (debug) {
-				System.out.println("SessionFilter::getParameter(" + name + ") localParams = " + localParams);
-			}
+			logger.debug("SessionFilter::getParameter(" + name + ") localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameter(name);
 			}
@@ -340,9 +267,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public String[] getParameterValues(String name) {
-			if (debug) {
-				System.out.println("SessionFilter::getParameterValues(" + name + ") localParams = " + localParams);
-			}
+			logger.debug("SessionFilter::getParameterValues(" + name + ") localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterValues(name);
 			}
@@ -351,9 +276,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public Enumeration getParameterNames() {
-			if (debug) {
-				System.out.println("SessionFilter::getParameterNames() localParams = " + localParams);
-			}
+			logger.debug("SessionFilter::getParameterNames() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterNames();
 			}
@@ -362,9 +285,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public Map getParameterMap() {
-			if (debug) {
-				System.out.println("SessionFilter::getParameterMap() localParams = " + localParams);
-			}
+			logger.debug("SessionFilter::getParameterMap() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterMap();
 			}

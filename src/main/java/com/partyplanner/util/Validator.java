@@ -28,7 +28,14 @@ public class Validator {
 	protected HashMap errorMap = new HashMap();
 	
 	public String sanityzeString(String str) {
-		logger.debug("Entering method sanityzeString: ("+str+")");
+		return sanityzeString(str, false);
+	}
+	
+	public String sanityzeString(String str, boolean isPassword) {
+		if ( isPassword )
+			logger.debug("Entering method sanityzeString: (********)");
+		else
+			logger.debug("Entering method sanityzeString: ("+str+")");
 		if ( str == null ) {
 			logger.debug("String validation failed. Value is null!");
 			return null;
@@ -39,15 +46,25 @@ public class Validator {
 	}
 	
 	public String validateStringWithLength(String str, String fieldName, int minLength, int maxLength) {
-		logger.debug("Entering method validateStringWithLength ("+str+","+fieldName+","+minLength+","+maxLength+")");
+		return validateStringWithLength(str, fieldName, minLength, maxLength, false);
+	}
+	
+	public String validateStringWithLength(String str, String fieldName, int minLength, int maxLength, boolean isPassword) {
+		if ( isPassword )
+			logger.debug("Entering method validateStringWithLength (********,"+fieldName+","+minLength+","+maxLength+")");
+		else
+			logger.debug("Entering method validateStringWithLength ("+str+","+fieldName+","+minLength+","+maxLength+")");
 		String tmpStr;
 		logger.debug("Sanitize String.");
-		tmpStr = sanityzeString(str);
+		tmpStr = sanityzeString(str, isPassword);
 		logger.debug("String sanitized.");
 		if (	( minLength > 0 && (tmpStr == null || tmpStr.isEmpty() || tmpStr.length() < minLength) ) ||
 				(tmpStr != null && tmpStr.length() > maxLength)) {
 			String msg = fieldName+" must be between "+minLength+" and "+maxLength+" characters.";
-			logger.info(msg+" ("+tmpStr+")");
+			if ( isPassword )
+				logger.info(msg+" (********)");
+			else
+				logger.info(msg+" ("+tmpStr+")");
 			errorMap.put(fieldName, msg);
 		}
 		logger.debug("String validation with length success.");
@@ -78,9 +95,25 @@ public class Validator {
 		return email;
 	}
 	
+	/**
+	 *
+	 * Password rules:
+	 * - Must be at least 8 characters long;
+	 * - Must be at max 255 characters long;
+	 * - Must have at least one of each:
+	 *	- Uppercase letter;
+	 *	- Lowercase letter;
+	 *	- Number;
+	 *	- Special character ( For now, anything not a number or letter )
+	 * 
+	 * @param password
+	 * @param fieldName
+	 * @return
+	 */
 	public String validatePassword(String password, String fieldName) {
 		logger.debug("Entering mehod validatePassword.");
-		password = validateStringWithLength(password, fieldName, 8, 255);
+		password = validateStringWithLength(password, fieldName, 8, 255, true);
+		
 		return password;
 	}
 	
@@ -112,9 +145,16 @@ public class Validator {
 	}
 	
 	public String validateConfirmation(String confirmationString, String originalString, String fieldName) {
-		logger.debug("Entering method validateConfirmation ("+confirmationString+","+originalString+","+fieldName+")");
+		return validateConfirmation(confirmationString, originalString, fieldName, false);
+	}
+	
+	public String validateConfirmation(String confirmationString, String originalString, String fieldName, boolean isPassword) {
+		if ( isPassword )
+			logger.debug("Entering method validateConfirmation (********,********,"+fieldName+")");
+		else
+			logger.debug("Entering method validateConfirmation ("+confirmationString+","+originalString+","+fieldName+")");
 		logger.debug("Sanitize String.");
-		confirmationString = sanityzeString(confirmationString);
+		confirmationString = sanityzeString(confirmationString,isPassword);
 		logger.debug("String sanitized.");
 		if ( !confirmationString.equals(originalString) ) {
 			String msg = fieldName+" doesn't match.";
