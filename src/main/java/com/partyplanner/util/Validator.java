@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -75,18 +74,9 @@ public class Validator {
 		logger.debug("Entering method validateEmail ("+email+","+fieldName+")");
 		logger.debug("Validate email string.");
 		email = validateStringWithLength(email, fieldName, 5, 255);
-		logger.debug("Email string validated");
-		Pattern p;
-//		p = Pattern.compile("^([A-Z0-9_%+-]+)(\\.$1)+@[A-Z0-9.-]+\\.[A-Z]{2,4}$",CASE_INSENSITIVE);
-		logger.debug("Compiling regex.");
-		p = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,4}[a-z0-9])?",CASE_INSENSITIVE);
-		logger.debug("Regex compiled");
-				
-		logger.debug("Matching regex.");
-		Matcher m = p.matcher(email);
-		logger.debug("Regex match executed.");
-		
-		if ( ! m.matches() ) {
+		logger.debug("Email string validated.");
+
+		if ( ! validateStringWithRegex(email, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,4}[a-z0-9])?", fieldName, true) ) {
 			String msg = fieldName+" is not a valid email";
 			logger.info(msg+" ("+email+")");
 			errorMap.put(fieldName, msg);
@@ -101,20 +91,51 @@ public class Validator {
 	 * - Must be at least 8 characters long;
 	 * - Must be at max 255 characters long;
 	 * - Must have at least one of each:
-	 *	- Uppercase letter;
-	 *	- Lowercase letter;
+	 *	- Letter;
 	 *	- Number;
-	 *	- Special character ( For now, anything not a number or letter )
 	 * 
 	 * @param password
 	 * @param fieldName
 	 * @return
 	 */
 	public String validatePassword(String password, String fieldName) {
-		logger.debug("Entering mehod validatePassword.");
+		logger.debug("Entering method validatePassword.");
+		logger.debug("Validate password string.");
 		password = validateStringWithLength(password, fieldName, 8, 255, true);
+		logger.debug("Password string validated.");
 		
+//		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
+		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z]).{8,255}", fieldName, true) ) {
+//			String msg = fieldName+" is not a valid password. Must include at least one uppercase letter, one lowercase letter, one number, one special character and be at least 8 characters long.";
+			String msg = fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.";
+			logger.info(msg);
+			errorMap.put(fieldName, msg);
+		}
+		logger.debug("Password validation success.");
 		return password;
+	}
+	
+	/**
+	 *
+	 * @param str
+	 * @param regex
+	 * @param fieldName
+	 * @param caseInsensitive
+	 * @return
+	 */
+	public boolean validateStringWithRegex(String str, String regex, String fieldName, boolean caseInsensitive) {
+		Pattern p;
+		
+		logger.debug("Compiling regex.");
+		p = Pattern.compile(regex);
+		logger.debug("Regex compiled.");
+		
+		logger.debug("Matching regex.");
+		Matcher m = p.matcher(str);
+		logger.debug("Regex match executed.");
+		
+		return m.matches();
+		
 	}
 	
 	/**
