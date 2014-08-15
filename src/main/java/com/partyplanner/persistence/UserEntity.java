@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -22,21 +23,24 @@ import javax.persistence.Table;
  */
 @Entity
 @Table( name = "user" )
-@NamedQuery(name="getUserByEmail",query="SELECT u FROM UserEntity u WHERE u.email = :email")
+@NamedQueries({
+	@NamedQuery(name="getUserByEmail",query="SELECT u FROM UserEntity u WHERE u.email = :email"),
+	@NamedQuery(name="getUserByNickname",query="SELECT u FROM UserEntity u WHERE u.nickname = :nickname")
+})
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column( name = "user_id" )
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@Column( name = "user_id", insertable = false )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column( name = "user_created" )
+	@Column( name = "user_created", insertable = false, updatable = false )
 	private Date created;
 	
-	@Column( name = "user_updated" )
+	@Column( name = "user_updated", insertable = false )
 	private Date updated;
 	
-	@Column( name = "user_status_id" )
+	@Column( name = "user_status_id", insertable = false )
 	private int statusId;
 	
 	@Column( name = "user_nickname" )
@@ -51,19 +55,19 @@ public class UserEntity implements Serializable {
 	@Column( name = "user_email" )
 	private String email;
 	
-	@Column( name = "user_email_confirmation" )
+	@Column( name = "user_email_confirmation", insertable = false )
 	private boolean emailConfirmation;
 	
 	@Column( name = "user_password" )
 	private String password;
 	
-	@Column( name = "user_last_login_attempt_time" )
+	@Column( name = "user_last_login_attempt_time", insertable = false )
 	private Date lastLoginAttemptTime;
 	
 	@Column( name = "user_last_login_attempt_ip" )
 	private String lastLoginAttemptIp;
 	
-	@Column( name = "user_bad_login_attempt_count" )
+	@Column( name = "user_bad_login_attempt_count", insertable = false )
 	private int badLoginAttemptCount;
 	
 	@Column( name = "user_birth_date" )
@@ -218,10 +222,7 @@ public class UserEntity implements Serializable {
 			return false;
 		}
 		UserEntity other = (UserEntity) object;
-		if (this.id != other.id) {
-			return false;
-		}
-		return true;
+		return this.id == other.id;
 	}
 
 	@Override

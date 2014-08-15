@@ -74,24 +74,30 @@ public class RegisterUserServlet extends HttpServlet {
 			
 			if(user.isUserRegistered(email))
 			{
-				logger.info((new StringBuilder()).append("E-mail address (").append(email).append(") is already in use.").toString());
+				logger.info("E-mail address ("+email+") is already in use.");
 				messages.put("email", "This e-mail address is already in use.");
+			}
+			if(user.isNicknameTaken(nickname))
+			{
+				logger.info("Nickname ("+nickname+") is already in use.");
+				messages.put("nickname", "This nickname is already in use.");
 			}
 			if(!messages.isEmpty())
 			{
-				logger.info((new StringBuilder()).append("Validation errors on registration for user: ").append(nickname).toString());
+				logger.info("Validation errors on registration for user: "+nickname);
 				messages.put("alert", "Please correct the fields below:");
 				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(request, response);
 			}
-			// test Branch
-//			out.println(birthDate.toString());
-//			user.registerUser("mimi", firstName, lastName, email, password, null, Boolean.TRUE, Boolean.TRUE);
-			
-			
-//			out.println(user.getFirstName((String) request.getAttribute("email")));
-			messages.put("alert", "REGISTER USER");
-			user.registerUser("mimi", firstName, lastName, email, password, null, Boolean.TRUE, Boolean.TRUE);
-			request.getRequestDispatcher("/WEB-INF/view/registration.jsp").include(request, response);
+
+			boolean retVal = user.registerUser(nickname, firstName, lastName, email, password, birthDate, optin, gender, ipAddress);
+			if (retVal) {
+				logger.info("User "+nickname+" registered successfully.");
+				request.getRequestDispatcher("/WEB-INF/view/registration_success.jsp").include(request, response);
+			} else {
+				logger.info("Error registering user "+nickname);
+				messages.put("alert", "Unknown error registering user. Please try again.");
+				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").include(request, response);
+			}
 			
 		}
 	}
@@ -107,12 +113,9 @@ public class RegisterUserServlet extends HttpServlet {
 		emailConfirmation = vdt.validateConfirmation(request.getParameter("email_confirmation"), email, "email_confirmation");
 		password = vdt.validatePassword(request.getParameter("password"), "password");
 		passwordConfirmation = vdt.validateConfirmation(request.getParameter("password_confirmation"), password, "password_confirmation");
-		// Implement a date validator on the util class
 		birthDate = vdt.validateDate(request.getParameter("birth_date"), "birth_date");
 		optin = vdt.validateBoolean(request.getParameter("optin") );
-		// Implement a gender validator on the util class
 		gender = vdt.validateGender(request.getParameter("gender"), "gender");
-//		// Implement an IP validator on the util class
 		ipAddress = vdt.sanityzeString(request.getRemoteAddr() );
 		messages = vdt.getErrorMap();
 		request.setAttribute("messages", messages);
