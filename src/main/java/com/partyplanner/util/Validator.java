@@ -76,8 +76,8 @@ public class Validator {
 		email = validateStringWithLength(email, fieldName, 5, 255);
 		logger.debug("Email string validated.");
 
-		if ( ! validateStringWithRegex(email, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,4}[a-z0-9])?", fieldName, true) ) {
-			String msg = fieldName+" is not a valid email";
+		if ( ! validateStringWithRegex(email, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,4}[a-z0-9])?", true) ) {
+			String msg = fieldName+" is not a valid email.";
 			logger.info(msg+" ("+email+")");
 			errorMap.put(fieldName, msg);
 		}
@@ -105,7 +105,7 @@ public class Validator {
 		logger.debug("Password string validated.");
 		
 //		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
-		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z]).{8,255}", fieldName, true) ) {
+		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z]).{8,255}", true) ) {
 //			String msg = fieldName+" is not a valid password. Must include at least one uppercase letter, one lowercase letter, one number, one special character and be at least 8 characters long.";
 			String msg = fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.";
 			logger.info(msg);
@@ -123,12 +123,15 @@ public class Validator {
 	 * @param caseInsensitive
 	 * @return
 	 */
-	public boolean validateStringWithRegex(String str, String regex, String fieldName, boolean caseInsensitive) {
+	public boolean validateStringWithRegex(String str, String regex, boolean caseInsensitive) {
 		Pattern p;
 		
 		logger.debug("Compiling regex.");
-		p = Pattern.compile(regex);
+		p = regex != null?Pattern.compile(regex):Pattern.compile("");
 		logger.debug("Regex compiled.");
+		
+		logger.debug("Treating for null string.");
+		str = str != null?str:"";
 		
 		logger.debug("Matching regex.");
 		Matcher m = p.matcher(str);
@@ -155,7 +158,7 @@ public class Validator {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date newDate = null;
 		try {
-			newDate = (Date) df.parse(date);
+			newDate = (Date) df.parse(date!=null?date:"");
 		} catch (ParseException ex) {
 			String msg = fieldName+" is not a valid date";
 			logger.info(msg+" ("+newDate+")");
@@ -176,6 +179,8 @@ public class Validator {
 			logger.debug("Entering method validateConfirmation ("+confirmationString+","+originalString+","+fieldName+")");
 		logger.debug("Sanitize String.");
 		confirmationString = sanityzeString(confirmationString,isPassword);
+		confirmationString = confirmationString == null ? "" : confirmationString;
+		originalString = originalString == null ? "" : originalString;
 		logger.debug("String sanitized.");
 		if ( !confirmationString.equals(originalString) ) {
 			String msg = fieldName+" doesn't match.";
@@ -187,7 +192,7 @@ public class Validator {
 	
 	public Boolean validateBoolean(String booleanValue) {
 		logger.debug("Entering method validateConfirmation ("+booleanValue+")");
-		if ( booleanValue != null && !booleanValue.equals("false") ) {
+		if ( booleanValue != null && !booleanValue.equals("false") && !booleanValue.equals("") ) {
 			logger.debug("Boolean validation failed. Value is null or false!");
 			return true;
 		} else {
