@@ -48,4 +48,16 @@
         <description>General user</description>
         <role-name>user</role-name>
     </security-role>
+    <ejb-local-ref>
+        <ejb-ref-name>userBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>com.partyplanner.model.UserBeanLocal</local>
+        <ejb-link>PartyPlanner-0.1#UserBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>userBean1</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>com.partyplanner.model.UserBeanLocal</local>
+        <ejb-link>PartyPlanner-0.1#UserBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

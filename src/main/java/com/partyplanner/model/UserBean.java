@@ -43,16 +43,29 @@ public class UserBean implements UserBeanLocal {
 	public String getFirstName(final String email) {
 		logger.debug("Entering method getFirstName("+email+")");
 		logger.debug("Executing Named Query: getUserByEmail");
-		UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
-		return u.getFirstName();
+		String firstName = null;
+		try {
+			UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
+			firstName = u.getFirstName();
+			
+		} catch (Exception e) {
+			logger.warn("User not found with email: "+email, e);
+		}
+		return firstName;
 	}
 
 	@Override
-	public int getId(final String email) {
+	public Integer getId(final String email) {
 		logger.debug("Entering method getId("+email+")");
 		logger.debug("Executing Named Query: getUserByEmail");
-		UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
-		return u.getId();
+		Integer id = null;
+		try {
+			UserEntity u = (UserEntity) em.createNamedQuery("getUserByEmail").setParameter("email", email).getSingleResult();
+			id = u.getId();
+		} catch (Exception e) {
+			logger.warn("User not found with email: "+email,e);
+		}
+		return id;
 	}
 	
 	
@@ -70,6 +83,7 @@ public class UserBean implements UserBeanLocal {
 		
 		logger.debug("Entering method registerUser("+nickname+","+firstName+","+lastName+","+email+",********,"+birthDate.toString()+","+optin.toString()+","+gender.toString()+","+ipAddress);
 		UserEntity userEntity = new UserEntity();
+//		UserEntity userEntity = null;
 		
 		userEntity.setNickname(nickname);
 		userEntity.setFirstName(firstName);
@@ -88,6 +102,8 @@ public class UserBean implements UserBeanLocal {
 			em.persist(userEntity);
 		} catch (PersistenceException e) {
 			logger.error("Error registering user",e);
+			return false;
+		} catch (Exception e) {
 			return false;
 		}
 		
