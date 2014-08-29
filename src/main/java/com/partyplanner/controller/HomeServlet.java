@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author gustavo
  */
-@WebServlet(name = "Home", urlPatterns = "")
+@WebServlet(name = "HomeServlet", urlPatterns = {""})
 public class HomeServlet extends HttpServlet {
 
 	/**
