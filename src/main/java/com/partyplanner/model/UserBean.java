@@ -103,8 +103,6 @@ public class UserBean implements UserBeanLocal {
 		} catch (PersistenceException e) {
 			logger.error("Error registering user",e);
 			return false;
-		} catch (Exception e) {
-			return false;
 		}
 		
 		return true;

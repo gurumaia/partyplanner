@@ -8,15 +8,17 @@ package com.partyplanner.model;
 
 import com.partyplanner.persistence.UserEntity;
 import java.util.Date;
-import javax.ejb.embeddable.EJBContainer;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import org.mockito.MockitoAnnotations;
 import static org.testng.Assert.*;
 import org.testng.annotations.AfterMethod;
@@ -134,11 +136,11 @@ public class UserBeanNGTest {
 
 	/**
 	 * Test of registerUser method, of class UserBean.
+	 * Success case
 	 * @throws java.lang.Exception
 	 */
 	@Test
 	public void testRegisterUser_Success() throws Exception {
-		System.out.println("registerUser");
 		String nickname = "gurumaia";
 		String firstName = "Gustavo";
 		String lastName = "Maia";
@@ -151,13 +153,39 @@ public class UserBeanNGTest {
 		
 		Boolean expResult = true;
 		
-//		when(em.persist(ue))
-		
+//		Mockito.doThrow(new PersistenceException()).when(em).persist(anyString());
 		Boolean result = userBean.registerUser(nickname, firstName, lastName, email, password, birthDate, optin, gender, ipAddress);
-		System.out.println(result);
+		
+		verify(em,Mockito.atLeastOnce()).persist(anyString());
+		System.out.println("testRegisterUser_Success - Expected '"+expResult+"' and got '"+result+"'");
 		assertEquals(result, expResult);
-		// TODO review the generated test code and remove the default call to fail.
-//		fail("The test case is a prototype.");
+	}
+
+	/**
+	 * Test of registerUser method, of class UserBean.
+	 * Failure case
+	 * @throws java.lang.Exception
+	 */
+	@Test
+	public void testRegisterUser_Failure() throws Exception {
+		String nickname = "gurumaia";
+		String firstName = "Gustavo";
+		String lastName = "Maia";
+		String email = "gurumaia@gmail.com";
+		String password = "teste01";
+		Date birthDate = new Date(1);
+		Boolean optin = false;
+		Boolean gender = true;
+		String ipAddress = "127.0.0.1";
+		
+		Boolean expResult = false;
+		
+		Mockito.doThrow(new PersistenceException()).when(em).persist(anyString());
+		Boolean result = userBean.registerUser(nickname, firstName, lastName, email, password, birthDate, optin, gender, ipAddress);
+		
+		verify(em,Mockito.atLeastOnce()).persist(anyString());
+		System.out.println("testRegisterUser_Failure - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
 	}
 
 	/**
