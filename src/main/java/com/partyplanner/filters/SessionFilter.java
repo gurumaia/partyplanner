@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  *
@@ -48,18 +50,18 @@ public class SessionFilter implements Filter {
 	
 	private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-		logger.debug("SessionFilter:DoBeforeProcessing");
-		
 		Boolean loggedIn;
 		loggedIn = (request.getRemoteUser() != null);
+		ThreadContext.put("uuid",UUID.randomUUID().toString());
+		ThreadContext.put("user", request.getRemoteUser());
+		ThreadContext.put("sessionId", request.getSession().getId());
 		request.setAttribute("loggedIn",loggedIn);
-
+		logger.debug("DoBeforeProcessing");
 	}	
 	
 	private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-//		logger.debug("SessionFilter:DoAfterProcessing");
-		
+		ThreadContext.clearAll();
 	}
 
 	/**
@@ -74,7 +76,6 @@ public class SessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain)
 			throws IOException, ServletException {
-		logger.debug("SessionFilter:doFilter()");
 		
 		
 
@@ -146,7 +147,7 @@ public class SessionFilter implements Filter {
 	public void init(FilterConfig filterConfig) {		
 		this.filterConfig = filterConfig;
 		if (filterConfig != null) {
-			logger.debug("SessionFilter: Initializing filter");
+			logger.debug("Initializing filter");
 		}
 	}
 
@@ -232,7 +233,7 @@ public class SessionFilter implements Filter {
 		protected Hashtable localParams = null;
 		
 		public void setParameter(String name, String[] values) {
-			logger.debug("SessionFilter::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
+			logger.debug("setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
 			
 			if (localParams == null) {
 				localParams = new Hashtable();
@@ -250,7 +251,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public String getParameter(String name) {
-			logger.debug("SessionFilter::getParameter(" + name + ") localParams = " + localParams);
+			logger.debug("getParameter(" + name + ") localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameter(name);
 			}
@@ -267,7 +268,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public String[] getParameterValues(String name) {
-			logger.debug("SessionFilter::getParameterValues(" + name + ") localParams = " + localParams);
+			logger.debug("getParameterValues(" + name + ") localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterValues(name);
 			}
@@ -276,7 +277,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public Enumeration getParameterNames() {
-			logger.debug("SessionFilter::getParameterNames() localParams = " + localParams);
+			logger.debug("getParameterNames() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterNames();
 			}
@@ -285,7 +286,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public Map getParameterMap() {
-			logger.debug("SessionFilter::getParameterMap() localParams = " + localParams);
+			logger.debug("getParameterMap() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterMap();
 			}

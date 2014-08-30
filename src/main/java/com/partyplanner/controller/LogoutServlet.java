@@ -6,15 +6,16 @@
 
 package com.partyplanner.controller;
 
+import com.partyplanner.filters.SessionFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.HttpConstraint;
-import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -23,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/Logout"})
 //@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class LogoutServlet extends HttpServlet {
+	
+	private static final Logger logger = LogManager.getLogger(SessionFilter.class.getName());
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,6 +40,7 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
+			logger.debug("Logging user out.");
 			request.logout();
 			response.sendRedirect("/PartyPlanner/");
 		}
