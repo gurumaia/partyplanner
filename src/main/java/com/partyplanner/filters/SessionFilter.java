@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  *
@@ -48,18 +50,19 @@ public class SessionFilter implements Filter {
 	
 	private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-		logger.debug("SessionFilter:DoBeforeProcessing");
-		
 		Boolean loggedIn;
 		loggedIn = (request.getRemoteUser() != null);
+		ThreadContext.put("uuid",UUID.randomUUID().toString());
+		ThreadContext.put("user", request.getRemoteUser());
+		ThreadContext.put("sessionId", request.getSession().getId());
 		request.setAttribute("loggedIn",loggedIn);
-
+		logger.debug("DoBeforeProcessing");
 	}	
 	
 	private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
 //		logger.debug("SessionFilter:DoAfterProcessing");
-		
+		ThreadContext.clearAll();
 	}
 
 	/**
@@ -74,7 +77,6 @@ public class SessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain)
 			throws IOException, ServletException {
-		logger.debug("SessionFilter:doFilter()");
 		
 		
 
