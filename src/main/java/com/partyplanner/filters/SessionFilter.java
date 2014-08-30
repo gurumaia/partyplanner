@@ -61,7 +61,6 @@ public class SessionFilter implements Filter {
 	
 	private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-//		logger.debug("SessionFilter:DoAfterProcessing");
 		ThreadContext.clearAll();
 	}
 
@@ -148,7 +147,7 @@ public class SessionFilter implements Filter {
 	public void init(FilterConfig filterConfig) {		
 		this.filterConfig = filterConfig;
 		if (filterConfig != null) {
-			logger.debug("SessionFilter: Initializing filter");
+			logger.debug("Initializing filter");
 		}
 	}
 
@@ -234,7 +233,7 @@ public class SessionFilter implements Filter {
 		protected Hashtable localParams = null;
 		
 		public void setParameter(String name, String[] values) {
-			logger.debug("SessionFilter::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
+			logger.debug("setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
 			
 			if (localParams == null) {
 				localParams = new Hashtable();
@@ -252,7 +251,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public String getParameter(String name) {
-			logger.debug("SessionFilter::getParameter(" + name + ") localParams = " + localParams);
+			logger.debug("getParameter(" + name + ") localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameter(name);
 			}
@@ -269,7 +268,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public String[] getParameterValues(String name) {
-			logger.debug("SessionFilter::getParameterValues(" + name + ") localParams = " + localParams);
+			logger.debug("getParameterValues(" + name + ") localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterValues(name);
 			}
@@ -278,7 +277,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public Enumeration getParameterNames() {
-			logger.debug("SessionFilter::getParameterNames() localParams = " + localParams);
+			logger.debug("getParameterNames() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterNames();
 			}
@@ -287,7 +286,7 @@ public class SessionFilter implements Filter {
 		
 		@Override
 		public Map getParameterMap() {
-			logger.debug("SessionFilter::getParameterMap() localParams = " + localParams);
+			logger.debug("getParameterMap() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterMap();
 			}
