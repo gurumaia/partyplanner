@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.QueryTimeoutException;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
@@ -84,7 +85,24 @@ public class UserBeanNGTest {
 
 	/**
 	 * Test of getFirstName method, of class UserBean.
-	 * Failure case
+	 * Failure case - email is not found
+	 * @throws java.lang.Exception
+	 */
+	@Test
+	public void testGetFirstName_NotFound() throws Exception {
+		String email = "asdf@gmail.com";
+		String expResult = null;
+		
+		when(query.getSingleResult()).thenReturn(ue);
+		when(ue.getFirstName()).thenThrow(NoResultException.class);
+		
+		String result = userBean.getFirstName(email);
+		assertEquals(result, expResult);
+	}
+
+	/**
+	 * Test of getFirstName method, of class UserBean.
+	 * Failure case - generic error
 	 * @throws java.lang.Exception
 	 */
 	@Test
@@ -93,7 +111,7 @@ public class UserBeanNGTest {
 		String expResult = null;
 		
 		when(query.getSingleResult()).thenReturn(ue);
-		when(ue.getFirstName()).thenThrow(NoResultException.class);
+		when(ue.getFirstName()).thenThrow(QueryTimeoutException.class);
 		
 		String result = userBean.getFirstName(email);
 		assertEquals(result, expResult);

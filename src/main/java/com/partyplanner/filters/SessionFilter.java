@@ -6,6 +6,7 @@
 
 package com.partyplanner.filters;
 
+import com.partyplanner.model.UserBeanLocal;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.ejb.EJB;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -39,6 +41,9 @@ import org.apache.logging.log4j.ThreadContext;
 public class SessionFilter implements Filter {
 	
 	private static final Logger logger = LogManager.getLogger(SessionFilter.class.getName());
+	
+	@EJB
+	UserBeanLocal user;
 
 	// The filter configuration object we are associated with.  If
 	// this value is null, this filter instance is not currently
@@ -56,6 +61,14 @@ public class SessionFilter implements Filter {
 		ThreadContext.put("user", request.getRemoteUser());
 		ThreadContext.put("sessionId", request.getSession().getId());
 		request.setAttribute("loggedIn",loggedIn);
+		if (loggedIn) {
+			try {
+				request.setAttribute("userName", user.getFirstName(request.getRemoteUser()));
+			} catch (Exception e) {
+				logger.error("There was an unexpected error accessing the UserBean model",e);
+			}
+		}
+			
 		logger.debug("DoBeforeProcessing");
 	}	
 	
