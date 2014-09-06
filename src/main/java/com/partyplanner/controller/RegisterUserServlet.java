@@ -72,30 +72,44 @@ public class RegisterUserServlet extends HttpServlet {
 			logger.debug("Processing RegisterUserServlet.");
 			parseInput(request);
 			
-			if(user.isUserRegistered(email))
-			{
-				logger.info("E-mail address ("+email+") is already in use.");
-				messages.put("email", "This e-mail address is already in use.");
-			}
-			if(user.isNicknameTaken(nickname))
-			{
-				logger.info("Nickname ("+nickname+") is already in use.");
-				messages.put("nickname", "This nickname is already in use.");
-			}
-			if(!messages.isEmpty())
-			{
-				logger.info("Validation errors on registration for user: "+nickname);
-				messages.put("alert", "Please correct the fields below:");
+			try {
+				if(user.isUserRegistered(email))
+				{
+					logger.info("E-mail address ("+email+") is already in use.");
+					messages.put("email", "This e-mail address is already in use.");
+				}
+				if(user.isNicknameTaken(nickname))
+				{
+					logger.info("Nickname ("+nickname+") is already in use.");
+					messages.put("nickname", "This nickname is already in use.");
+				}
+				if(!messages.isEmpty())
+				{
+					logger.info("Validation errors on registration for user: "+nickname);
+					messages.put("alert", "Please correct the fields below:");
+					request.getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(request, response);
+					return;
+				}
+			} catch (Exception e) {
+				logger.error("There was an unexpected error accessing the UserBean model for user with email: "+email,e);
+				messages.put("alert", "There was an unexpected error during registration. Please try again.");
 				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(request, response);
+				return;
 			}
+			
 
-			boolean retVal = user.registerUser(nickname, firstName, lastName, email, password, birthDate, optin, gender, ipAddress);
+			Boolean retVal = null;
+			try {
+				retVal = user.registerUser(nickname, firstName, lastName, email, password, birthDate, optin, gender, ipAddress);
+			} catch (Exception e) {
+				logger.error("There was an unexpected error registering user with email: "+email,e);
+			}
 			if (retVal) {
 				logger.info("User "+nickname+" registered successfully.");
 				request.getRequestDispatcher("/WEB-INF/view/registration_success.jsp").include(request, response);
 			} else {
 				logger.info("Error registering user "+nickname);
-				messages.put("alert", "Unknown error registering user. Please try again.");
+				messages.put("alert", "There was an unexpected error during registration. Please try again.");
 				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").include(request, response);
 			}
 			
