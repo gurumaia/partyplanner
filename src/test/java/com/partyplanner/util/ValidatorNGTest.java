@@ -615,7 +615,7 @@ public class ValidatorNGTest {
 		String fieldName = "test_field";
 		
 		HashMap expErrorMap = new HashMap();
-		expErrorMap.put(fieldName,fieldName+" is not a valid date");
+		expErrorMap.put(fieldName,fieldName+" is not a valid date.");
 		
 		Validator instance = new Validator();
 		Date result = instance.validateDate(inputString, fieldName);
@@ -642,7 +642,7 @@ public class ValidatorNGTest {
 		String fieldName = "test_field";
 		
 		HashMap expErrorMap = new HashMap();
-		expErrorMap.put(fieldName,fieldName+" is not a valid date");
+		expErrorMap.put(fieldName,fieldName+" is not a valid date.");
 		
 		Validator instance = new Validator();
 		Date result = instance.validateDate(inputString, fieldName);
@@ -669,7 +669,7 @@ public class ValidatorNGTest {
 		String fieldName = "test_field";
 		
 		HashMap expErrorMap = new HashMap();
-		expErrorMap.put(fieldName,fieldName+" is not a valid date");
+		expErrorMap.put(fieldName,fieldName+" is not a valid date.");
 		
 		Validator instance = new Validator();
 		Date result = instance.validateDate(inputString, fieldName);

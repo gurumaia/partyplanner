@@ -7,10 +7,12 @@
 package com.partyplanner.util;
 
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +27,19 @@ public class Validator {
 	
 	private static final Logger logger = LogManager.getLogger(Validator.class.getName());
 	protected HashMap errorMap = new HashMap();
+	
+	ResourceBundle messageBundle = ResourceBundle.getBundle("messages");
+	
+	public Validator() {
+		logger.debug("Validator no-arg constructor");
+	}
+
+	public Validator(ResourceBundle rb) {
+		logger.debug("Validator ResourceBundle constructor: "+rb);
+		if ( rb != null ) {
+			messageBundle = rb;
+		}	
+	}
 	
 	public String sanityzeString(String str) {
 		return sanityzeString(str, false);
@@ -59,7 +74,7 @@ public class Validator {
 		logger.debug("String sanitized.");
 		if (	( minLength > 0 && (tmpStr == null || tmpStr.isEmpty() || tmpStr.length() < minLength) ) ||
 				(tmpStr != null && tmpStr.length() > maxLength)) {
-			String msg = fieldName+" must be between "+minLength+" and "+maxLength+" characters.";
+			String msg = MessageFormat.format( messageBundle.getString("validator_string_with_length"), new Object[]{fieldName,minLength,maxLength} );
 			if ( isPassword )
 				logger.info(msg+" (********)");
 			else
@@ -77,7 +92,7 @@ public class Validator {
 		logger.debug("Email string validated.");
 
 		if ( ! validateStringWithRegex(email, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,4}[a-z0-9])?", true) ) {
-			String msg = fieldName+" is not a valid email.";
+			String msg = MessageFormat.format( messageBundle.getString("validator_email"), fieldName );
 			logger.info(msg+" ("+email+")");
 			errorMap.put(fieldName, msg);
 		}
@@ -106,8 +121,7 @@ public class Validator {
 		
 //		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
 		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z]).{8,255}", true) ) {
-//			String msg = fieldName+" is not a valid password. Must include at least one uppercase letter, one lowercase letter, one number, one special character and be at least 8 characters long.";
-			String msg = fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.";
+			String msg = MessageFormat.format( messageBundle.getString("validator_password"), fieldName );
 			logger.info(msg);
 			errorMap.put(fieldName, msg);
 		}
@@ -160,7 +174,7 @@ public class Validator {
 		try {
 			newDate = (Date) df.parse(date!=null?date:"");
 		} catch (ParseException ex) {
-			String msg = fieldName+" is not a valid date";
+			String msg = MessageFormat.format( messageBundle.getString("validator_date"),	fieldName );
 			logger.info(msg+" ("+newDate+")");
 			errorMap.put(fieldName,msg);
 		}
@@ -183,7 +197,7 @@ public class Validator {
 		originalString = originalString == null ? "" : originalString;
 		logger.debug("String sanitized.");
 		if ( !confirmationString.equals(originalString) ) {
-			String msg = fieldName+" doesn't match.";
+			String msg = MessageFormat.format( messageBundle.getString("validator_confirmation"),	fieldName );
 			logger.info(msg+" ("+originalString+") vs ("+confirmationString+")");
 			errorMap.put(fieldName,msg);
 		}
@@ -207,7 +221,7 @@ public class Validator {
 		gender = sanityzeString(gender);
 		logger.debug("String sanitized.");
 		if (gender == null || gender.isEmpty()) {
-			String msg = fieldName+" is not a valid gender.";
+			String msg = MessageFormat.format( messageBundle.getString("validator_gender"),	fieldName );
 			logger.info(msg+" ("+gender+")");
 			errorMap.put(fieldName,msg);
 			return null;

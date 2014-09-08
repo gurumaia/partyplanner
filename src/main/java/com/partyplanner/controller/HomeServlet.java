@@ -34,7 +34,6 @@ public class HomeServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
-			out.println(request.getAttribute("userName"));
 			request.getRequestDispatcher("/WEB-INF/view/home.jsp").include(request,response);
 		}
 	}
