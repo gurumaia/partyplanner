@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 @WebServlet(name = "RegisterUserServlet", urlPatterns = {"/RegisterUser"})
 public class RegisterUserServlet extends HttpServlet {
 	
-	private static final Logger logger = LogManager.getLogger(Validator.class.getName());
+	private static final Logger logger = LogManager.getLogger(RegisterUserServlet.class.getName());
 
 	/**
 	 * User input variables
@@ -52,6 +53,7 @@ public class RegisterUserServlet extends HttpServlet {
 	protected HashMap messages = new HashMap();
 	@EJB
 	UserBeanLocal user;
+	ResourceBundle messageBundle;
 			
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,29 +72,32 @@ public class RegisterUserServlet extends HttpServlet {
 			 * Validate input
 			 */
 			logger.debug("Processing RegisterUserServlet.");
+//			return;
+			messageBundle = ResourceBundle.getBundle("messages", request.getLocale());
 			parseInput(request);
+			
 			
 			try {
 				if(user.isUserRegistered(email))
 				{
 					logger.info("E-mail address ("+email+") is already in use.");
-					messages.put("email", "This e-mail address is already in use.");
+					messages.put("email", messageBundle.getString("registration_email_in_use"));
 				}
 				if(user.isNicknameTaken(nickname))
 				{
 					logger.info("Nickname ("+nickname+") is already in use.");
-					messages.put("nickname", "This nickname is already in use.");
+					messages.put("nickname", messageBundle.getString("registration_nickname_in_use"));
 				}
 				if(!messages.isEmpty())
 				{
 					logger.info("Validation errors on registration for user: "+nickname);
-					messages.put("alert", "Please correct the fields below:");
+					messages.put("alert", messageBundle.getString("registration_correct_fields"));
 					request.getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(request, response);
 					return;
 				}
 			} catch (Exception e) {
 				logger.error("There was an unexpected error accessing the UserBean model for user with email: "+email,e);
-				messages.put("alert", "There was an unexpected error during registration. Please try again.");
+				messages.put("alert", messageBundle.getString("registration_unexpected_error"));
 				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").forward(request, response);
 				return;
 			}
@@ -109,7 +114,7 @@ public class RegisterUserServlet extends HttpServlet {
 				request.getRequestDispatcher("/WEB-INF/view/registration_success.jsp").include(request, response);
 			} else {
 				logger.info("Error registering user "+nickname);
-				messages.put("alert", "There was an unexpected error during registration. Please try again.");
+				messages.put("alert", messageBundle.getString("registration_unexpected_error"));
 				request.getRequestDispatcher("/WEB-INF/view/registration.jsp").include(request, response);
 			}
 			
@@ -119,7 +124,7 @@ public class RegisterUserServlet extends HttpServlet {
 	
 	protected void parseInput(HttpServletRequest request) {
 		logger.debug("Entering method parseInput.");
-		Validator vdt = new Validator();
+		Validator vdt = new Validator(messageBundle);
 		nickname = vdt.validateStringWithLength(request.getParameter("nickname"), "nickname", 3, 32 );
 		firstName = vdt.validateStringWithLength(request.getParameter("first_name"), "first_name", 3, 35 );
 		lastName = vdt.validateStringWithLength(request.getParameter("last_name"), "last_name", 0, 35 );

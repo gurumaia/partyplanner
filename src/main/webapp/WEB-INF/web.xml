@@ -2,11 +2,11 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
         <servlet-name>Login</servlet-name>
-        <jsp-file>/WEB-INF/html/login.html</jsp-file>
+        <jsp-file>/WEB-INF/view/login.jsp</jsp-file>
     </servlet>
     <servlet>
         <servlet-name>LoginError</servlet-name>
-        <jsp-file>/WEB-INF/html/loginError.html</jsp-file>
+        <jsp-file>/WEB-INF/view/loginError.jsp</jsp-file>
     </servlet>
     <servlet>
         <servlet-name>Registration</servlet-name>

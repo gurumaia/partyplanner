@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 import javax.ejb.EJB;
@@ -37,10 +38,10 @@ import org.apache.logging.log4j.ThreadContext;
  *
  * @author gustavo
  */
-@WebFilter(filterName = "SessionFilter", urlPatterns = {"/*"})
-public class SessionFilter implements Filter {
+@WebFilter(filterName = "GenericFilter", urlPatterns = {"/*"})
+public class GenericFilter implements Filter {
 	
-	private static final Logger logger = LogManager.getLogger(SessionFilter.class.getName());
+	private static final Logger logger = LogManager.getLogger(GenericFilter.class.getName());
 	
 	@EJB
 	UserBeanLocal user;
@@ -50,24 +51,27 @@ public class SessionFilter implements Filter {
 	// configured. 
 	private FilterConfig filterConfig = null;
 	
-	public SessionFilter() {
+	public GenericFilter() {
 	}	
 	
 	private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
-		Boolean loggedIn;
-		loggedIn = (request.getRemoteUser() != null);
+		// Logging information
 		ThreadContext.put("uuid",UUID.randomUUID().toString());
 		ThreadContext.put("user", request.getRemoteUser());
 		ThreadContext.put("sessionId", request.getSession().getId());
+		
+		// Is user logged in?
+		Boolean loggedIn;
+		loggedIn = (request.getRemoteUser() != null);
 		request.setAttribute("loggedIn",loggedIn);
-		if (loggedIn) {
-			try {
-				request.setAttribute("userName", user.getFirstName(request.getRemoteUser()));
-			} catch (Exception e) {
-				logger.error("There was an unexpected error accessing the UserBean model",e);
-			}
-		}
+//		if (loggedIn) {
+//			try {
+//				request.setAttribute("userName", user.getFirstName(request.getRemoteUser()));
+//			} catch (Exception e) {
+//				logger.error("There was an unexpected error accessing the UserBean model",e);
+//			}
+//		}
 			
 		logger.debug("DoBeforeProcessing");
 	}	
@@ -170,9 +174,9 @@ public class SessionFilter implements Filter {
 	@Override
 	public String toString() {
 		if (filterConfig == null) {
-			return ("SessionFilter()");
+			return ("GenericFilter()");
 		}
-		StringBuffer sb = new StringBuffer("SessionFilter(");
+		StringBuffer sb = new StringBuffer("GenericFilter(");
 		sb.append(filterConfig);
 		sb.append(")");
 		return (sb.toString());

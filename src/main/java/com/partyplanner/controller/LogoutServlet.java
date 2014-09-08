@@ -6,7 +6,6 @@
 
 package com.partyplanner.controller;
 
-import com.partyplanner.filters.SessionFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -25,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 //@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class LogoutServlet extends HttpServlet {
 	
-	private static final Logger logger = LogManager.getLogger(SessionFilter.class.getName());
+	private static final Logger logger = LogManager.getLogger(LogoutServlet.class.getName());
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
