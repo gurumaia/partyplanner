@@ -304,7 +304,7 @@ public class GenericFilter implements Filter {
 		}
 		
 		@Override
-		public Enumeration getParameterNames() {
+		public Enumeration<String> getParameterNames() {
 			logger.debug("getParameterNames() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterNames();
@@ -313,7 +313,7 @@ public class GenericFilter implements Filter {
 		}		
 		
 		@Override
-		public Map getParameterMap() {
+		public Map<String,String[]> getParameterMap() {
 			logger.debug("getParameterMap() localParams = " + localParams);
 			if (localParams == null) {
 				return getRequest().getParameterMap();

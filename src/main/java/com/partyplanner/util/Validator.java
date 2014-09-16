@@ -28,7 +28,7 @@ import org.apache.logging.log4j.LogManager;
 public class Validator {
 	
 	private static final Logger logger = LogManager.getLogger(Validator.class.getName());
-	protected HashMap errorMap = new HashMap();
+	protected HashMap<String,String> errorMap;
 	
 	ResourceBundle messageBundle = ResourceBundle.getBundle("messages");
 	
@@ -39,6 +39,7 @@ public class Validator {
 	 * This is probably a fault on my part, need to re-check.
 	 */
 	public Validator() {
+		this.errorMap = new HashMap<>();
 		logger.debug("Validator no-arg constructor");
 	}
 
@@ -50,6 +51,7 @@ public class Validator {
 	 * @param rb Internationalization {@code ResourceBundle}
 	 */
 	public Validator(ResourceBundle rb) {
+		this.errorMap = new HashMap<>();
 		logger.debug("Validator ResourceBundle constructor: "+rb);
 		if ( rb != null ) {
 			messageBundle = rb;
@@ -353,7 +355,7 @@ public class Validator {
 	 *
 	 * @return {@code errorMap}
 	 */
-	public HashMap getErrorMap() {
+	public HashMap<String,String> getErrorMap() {
 		logger.debug("Entering method getErrorMap ()");
 		return errorMap;
 	}

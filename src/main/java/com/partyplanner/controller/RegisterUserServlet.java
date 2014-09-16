@@ -51,7 +51,7 @@ public class RegisterUserServlet extends HttpServlet {
 	/*
 	 * Internal variables
 	 */
-	protected HashMap messages = new HashMap();
+	protected HashMap<String,String> messages;
 	@EJB
 	UserBeanLocal user;
 	ResourceBundle messageBundle;
