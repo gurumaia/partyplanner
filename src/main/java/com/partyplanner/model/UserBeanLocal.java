@@ -9,10 +9,6 @@ package com.partyplanner.model;
 import java.util.Date;
 import javax.ejb.Local;
 
-/**
- *
- * @author gustavo
- */
 @Local
 public interface UserBeanLocal {
 	Integer getId(final String email) throws Exception;

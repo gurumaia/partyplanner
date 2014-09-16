@@ -24,15 +24,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author gustavo
+ * Registers a new user.
+ * <p>
+ * This servlet registers a new user when invoked via POST and receives the correct parameters.
  */
 @WebServlet(name = "RegisterUserServlet", urlPatterns = {"/RegisterUser"})
 public class RegisterUserServlet extends HttpServlet {
 	
 	private static final Logger logger = LogManager.getLogger(RegisterUserServlet.class.getName());
 
-	/**
+	/*
 	 * User input variables
 	 */
 	protected String nickname;
@@ -47,7 +48,7 @@ public class RegisterUserServlet extends HttpServlet {
 	protected Boolean gender;
 	protected String ipAddress;
 	
-	/**
+	/*
 	 * Internal variables
 	 */
 	protected HashMap messages = new HashMap();
@@ -56,9 +57,10 @@ public class RegisterUserServlet extends HttpServlet {
 	ResourceBundle messageBundle;
 			
 	/**
-	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-	 * methods.
-	 *
+	 * Processes requests for  HTTP <code>POST</code> methods.
+	 * <p>
+	 * Validates user input and if everything is ok, registers the user.
+	 * 
 	 * @param request servlet request
 	 * @param response servlet response
 	 * @throws ServletException if a servlet-specific error occurs
@@ -121,7 +123,14 @@ public class RegisterUserServlet extends HttpServlet {
 		}
 	}
 	
-	
+	/**
+	 * Parses user input received on the request.
+	 * <p>
+	 * This method uses {@link Validator} to parse and validate user input.
+	 * {@code Validator} returns a {@code HashMap} containing user-friendly error messages when needed.
+	 *
+	 * @param request
+	 */
 	protected void parseInput(HttpServletRequest request) {
 		logger.debug("Entering method parseInput.");
 		Validator vdt = new Validator(messageBundle);

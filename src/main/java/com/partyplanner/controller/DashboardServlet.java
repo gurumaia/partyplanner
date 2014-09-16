@@ -17,16 +17,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
- * @author gustavo
+ * This servlet implements basic Dashboard functionality.
+ * <p>
+ * NOT IMPLEMENTED YET
+ * 
  */
 @WebServlet(name="Dashboard",urlPatterns = "/Dashboard")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
 public class DashboardServlet extends HttpServlet {
 
 	/**
-	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-	 * methods.
+	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+	 * <p>
+	 * NOT IMPLEMENTED YET
 	 *
 	 * @param request servlet request
 	 * @param response servlet response

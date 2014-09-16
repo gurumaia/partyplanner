@@ -23,8 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author gustavo
+ * This EJB is responsible for user-related functionalities.
+ * 
  */
 @Stateless
 public class UserBean implements UserBeanLocal {
@@ -34,6 +34,15 @@ public class UserBean implements UserBeanLocal {
 	@PersistenceContext
 	private EntityManager em;
 	
+	/**
+	 * Return's a users first name based on the user's email.
+	 * <p>
+	 * Uses JPA to query the database.
+	 *
+	 * @param email Email to be checked, 
+	 * @return User's First Name on success, null if the user doesn't exist
+	 * @throws Exception if there is an unexpected problem while retrieving user information
+	 */
 	@Override
 	public String getFirstName(final String email)
 	throws Exception {
@@ -46,12 +55,19 @@ public class UserBean implements UserBeanLocal {
 			firstName = u.getFirstName();
 		} catch (NoResultException | NonUniqueResultException e) {
 			logger.warn("User not found with email: "+email, e);
-		} catch (Exception e) {
-			logger.warn("There was an unexpected problem while retrieving user with email: "+email, e);
 		}
 		return firstName;
 	}
 
+	/**
+	 * Return's a users ID based on the user's email.
+	 * 
+	 * Uses JPA to query the database.
+	 * 
+	 * @param email Email to be checked
+	 * @return User's ID on success, null if the user doesn't exist
+	 * @throws Exception if there is an unexpected problem while retrieving user information
+	 */
 	@Override
 	public Integer getId(final String email)
 	throws Exception {
@@ -63,14 +79,27 @@ public class UserBean implements UserBeanLocal {
 			id = u.getId();
 		} catch (NoResultException | NonUniqueResultException e) {
 			logger.info("User not found with email: "+email,e);
-		} catch (Exception e) {
-			logger.warn("There was an unexpected problem while retrieving user with email: "+email, e);
 		}
 		return id;
 	}
 	
-	
-	
+	/**
+	 * Encodes the password and then registers the user.
+	 * 
+	 * Uses JPA to insert the record into the database.
+	 * 
+	 * @param nickname
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param birthDate
+	 * @param optin
+	 * @param gender
+	 * @param ipAddress
+	 * @return true for successful registration and false for unsuccessful registration
+	 * @throws Exception if there's an unexpected error registering the user
+	 */
 	@Override
 	public boolean registerUser(final String nickname, 
 								final String firstName, 
@@ -110,6 +139,14 @@ public class UserBean implements UserBeanLocal {
 		return true;
 	}
 	
+	/**
+	 * Encodes a given password.
+	 * 
+	 * Uses Base64 (internal java API - this should be changed) to encode the password string.
+	 * 
+	 * @param password
+	 * @return Base64-encoded password, null on errors
+	 */
 	private String encodePassword(String password) {
 		logger.debug("Entering method encodePassword(********)");
 		MessageDigest md;
@@ -129,10 +166,13 @@ public class UserBean implements UserBeanLocal {
 	}
 
 	/**
-	 *
-	 * @param email
-	 * @return
-	 * @throws FileNotFoundException
+	 * Returns a boolean showing if a user is already registered.
+	 * 
+	 * Uses JPA to query the database.
+	 * 
+	 * @param email Email to be checked
+	 * @return true for registered user, false for unregistered user
+	 * @throws Exception if there is an unexpected problem while retrieving user information
 	 */
 	@Override
 	public boolean isUserRegistered(String email) 
@@ -147,6 +187,13 @@ public class UserBean implements UserBeanLocal {
 		return true;
 	}
 
+	/**
+	 * Returns a boolean showing if a user is already registered.
+	 * 
+	 * @param nickname Nickname to be checked
+	 * @return true for registered user, false for unregistered user
+	 * @throws Exception if there is an unexpected problem while retrieving user information
+	 */
 	@Override
 	public boolean isNicknameTaken(String nickname)
 	throws Exception {

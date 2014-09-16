@@ -105,7 +105,7 @@ public class UserBeanNGTest {
 	 * Failure case - generic error
 	 * @throws java.lang.Exception
 	 */
-	@Test
+	@Test(expectedExceptions = {QueryTimeoutException.class})
 	public void testGetFirstName_Failure() throws Exception {
 		String email = "asdf@gmail.com";
 		String expResult = null;
