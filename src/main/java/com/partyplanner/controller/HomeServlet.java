@@ -15,15 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
- * @author gustavo
+ * This {@code HttpServlet} serves the home page.
+ * <p>
+ * This is only needed because I couldn't get the empty ("") urlPattern to work with the descriptor.
+ * There is no functionality other than including the correct jsp.
  */
 @WebServlet(name = "HomeServlet", urlPatterns = {""})
 public class HomeServlet extends HttpServlet {
 
 	/**
-	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-	 * methods.
+	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
 	 *
 	 * @param request servlet request
 	 * @param response servlet response

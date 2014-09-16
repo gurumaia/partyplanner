@@ -35,8 +35,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
 
 /**
- *
- * @author gustavo
+ * This filter adds useful generic information to the request
+ * 
  */
 @WebFilter(filterName = "GenericFilter", urlPatterns = {"/*"})
 public class GenericFilter implements Filter {
@@ -52,8 +52,19 @@ public class GenericFilter implements Filter {
 	private FilterConfig filterConfig = null;
 	
 	public GenericFilter() {
-	}	
+	}
 	
+	/**
+	 * Generic filter processing - preServlet.
+	 * <p>
+	 * Adds logging information to the log4j thread context object (uuid, user's email and session id).
+	 * Adds a boolean to the request showing if the user's logged in.
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException 
+	 */
 	private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
 			throws IOException, ServletException {
 		// Logging information

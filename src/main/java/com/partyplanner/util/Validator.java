@@ -20,8 +20,10 @@ import org.apache.logging.log4j.LogManager;
 
 
 /**
- *
- * @author gustavo
+ * User input validation class.
+ * <p>
+ * This class has a {@link HashMap} {@link #errorMap} responsible for storing user-friendly error messages related to the fields being validated.
+ * After calling all needed methods, call {@link #getErrorMap()} to retrieve the HashMap.
  */
 public class Validator {
 	
@@ -30,10 +32,23 @@ public class Validator {
 	
 	ResourceBundle messageBundle = ResourceBundle.getBundle("messages");
 	
+	/**
+	 * No-arg constructor.
+	 * <p>
+	 * I don't really remember why this is needed, but I remember that it is related to internationalization.
+	 * This is probably a fault on my part, need to re-check.
+	 */
 	public Validator() {
 		logger.debug("Validator no-arg constructor");
 	}
 
+	/**
+	 * This constructor receives an internationalization {@code ResourceBundle}.
+	 * <p>
+	 * This {@link ResourceBundle} is later used to retrieve localized friendly messages.
+	 * 
+	 * @param rb Internationalization {@code ResourceBundle}
+	 */
 	public Validator(ResourceBundle rb) {
 		logger.debug("Validator ResourceBundle constructor: "+rb);
 		if ( rb != null ) {
@@ -41,10 +56,27 @@ public class Validator {
 		}	
 	}
 	
+	/**
+	 * This method overloads {@link #sanityzeString(java.lang.String, boolean)} and sets the boolean as false.
+	 * 
+	 * @param str String to be sanitized
+	 * @return Sanitized string on success, null on failure.
+	 */
 	public String sanityzeString(String str) {
 		return sanityzeString(str, false);
 	}
 	
+	/**
+	 * Sanitizes a given string.
+	 * <p>
+	 * Currently only checks for null and trims the string.
+	 * Will probably implement more generic string operations in the future.
+	 * If the string is a password, don't write it to the log files.
+	 * 
+	 * @param str String to be sanitized
+	 * @param isPassword Determines if the string represents a password or not
+	 * @return Sanitized string on success, null on failure.
+	 */
 	public String sanityzeString(String str, boolean isPassword) {
 		if ( isPassword )
 			logger.debug("Entering method sanityzeString: (********)");
@@ -59,10 +91,33 @@ public class Validator {
 		}
 	}
 	
+	/**
+	 * This method overloads {@link #validateStringWithLength(java.lang.String, java.lang.String, int, int, boolean) } and sets the boolean as false.
+	 *
+	 * @param str String to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @param minLength Minimum allowed string length
+	 * @param maxLength Maximum allowed string length
+	 * @return Validated String on success, null on failure
+	 */
 	public String validateStringWithLength(String str, String fieldName, int minLength, int maxLength) {
 		return validateStringWithLength(str, fieldName, minLength, maxLength, false);
 	}
 	
+	/**
+	 * Validates that input is a valid string between {@code minLength} and {@code maxLength} in length.
+	 * <p>
+	 * This method first calls {@link #sanityzeString(java.lang.String, boolean)} to sanity check the string and then validates if the string has the correct length, based on the {@code minLength} and {@code maxLength} variables.
+	 * On errors, adds a friendly message, retrieved from the internationalization {@link #messageBundle} to the {@link #errorMap}.
+	 * If the string is a password, don't write it to the log files.
+	 *
+	 * @param str String to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @param minLength Minimum allowed string length
+	 * @param maxLength Maximum allowed string length
+	 * @param isPassword Determines if the string represents a password or not
+	 * @return Validated String on success, null on failure
+	 */
 	public String validateStringWithLength(String str, String fieldName, int minLength, int maxLength, boolean isPassword) {
 		if ( isPassword )
 			logger.debug("Entering method validateStringWithLength (********,"+fieldName+","+minLength+","+maxLength+")");
@@ -85,6 +140,17 @@ public class Validator {
 		return tmpStr;
 	}
 	
+	/**
+	 * Validates that input is a valid email string.
+	 * <p>
+	 * This method first calls {@link #validateStringWithLength(java.lang.String, java.lang.String, int, int)} passing a {@code minLength} of 5 and a {@code maxLength} of 255.
+	 * Then it validates that the string conforms to an e-mail address using a regular expression, through {@link #validateStringWithRegex(java.lang.String, java.lang.String, boolean)}.
+	 * On errors, adds a friendly message, retrieved from the internationalization {@link #messageBundle} to the {@link #errorMap}.
+	 *
+	 * @param email String representing the e-mail address to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @return Validated String on success, null on failure
+	 */
 	public String validateEmail(String email, String fieldName) {
 		logger.debug("Entering method validateEmail ("+email+","+fieldName+")");
 		logger.debug("Validate email string.");
@@ -101,17 +167,26 @@ public class Validator {
 	}
 	
 	/**
-	 *
+	 * Validates that input is a valid password string.
+	 * <p>
+	 * This method first calls {@link #validateStringWithLength(java.lang.String, java.lang.String, int, int, boolean)} passing a {@code minLength} of 8, a {@code maxLength} of 255 and a {@code isPassword} of true.
+	 * Then it validates that the string conforms to a password using a regular expression, through {@link #validateStringWithRegex(java.lang.String, java.lang.String, boolean)}.
+	 * On errors, adds a friendly message, retrieved from the internationalization {@link #messageBundle} to the {@link #errorMap}.
+	 * This method does NOT write the password string to the log files, even on DEBUG mode.
+	 * <p>
 	 * Password rules:
-	 * - Must be at least 8 characters long;
-	 * - Must be at max 255 characters long;
-	 * - Must have at least one of each:
-	 *	- Letter;
-	 *	- Number;
+	 * <ul>
+	 * <li>Must be at least 8 characters long;
+	 * <li>Must be at max 255 characters long;
+	 * <li>Must have at least one of each:<ul>
+	 *  <li>Letter
+	 *	<li>Number
+	 *  </ul>
+	 * </ul>
 	 * 
-	 * @param password
-	 * @param fieldName
-	 * @return
+	 * @param password String representing the password to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @return Validated String on success, null on failure
 	 */
 	public String validatePassword(String password, String fieldName) {
 		logger.debug("Entering method validatePassword.");
@@ -130,12 +205,12 @@ public class Validator {
 	}
 	
 	/**
+	 * Validates a String against a regular expression.
 	 *
-	 * @param str
-	 * @param regex
-	 * @param fieldName
-	 * @param caseInsensitive
-	 * @return
+	 * @param str String to be validated.
+	 * @param regex String representing the regular expression.
+	 * @param caseInsensitive Boolean that will in the future work like this: true = Case Insensitive | false = Case Sensitive # NOT IMPLEMENTED YET
+	 * @return {@code boolean true} when string matches regex, {@code boolean false} when it doesn't
 	 */
 	public boolean validateStringWithRegex(String str, String regex, boolean caseInsensitive) {
 		Pattern p;
@@ -156,13 +231,18 @@ public class Validator {
 	}
 	
 	/**
-	 * Validates date input
+	 * Validates that input String is a valid date.
+	 * <p>
+	 * This method first calls {@link #sanityzeString(java.lang.String)}.
+	 * Then it creates a new {@link java.util.Date} object using {@link java.text.SimpleDateFormat} based on the input string.
+	 * <p>
 	 * Accepts following formats:
 	 *	- YYYY-MM-DD
-	 *	- DD/MM/YYYY
-	 * @param date
-	 * @param fieldName
-	 * @return 
+	 *	- DD/MM/YYYY # NOT IMPLEMENTED YET
+	 * 
+	 * @param date String representing date to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @return {@code Date} based on the input string on success, null on failure
 	 */
 	public Date validateDate(String date, String fieldName) {
 		logger.debug("Entering method validateDate ("+date+","+fieldName+")");
@@ -182,10 +262,30 @@ public class Validator {
 		return newDate;
 	}
 	
+	/**
+	 * This method overloads {@link #validateConfirmation(java.lang.String, java.lang.String, java.lang.String, boolean)} and sets the boolean as false.
+	 *
+	 * @param confirmationString String to be validated and confirmed
+	 * @param originalString Original string to match with {@code confirmationString}
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @return Validated {@code confirmationString} on success. Adds a message to {@code errorMap} on failure, but still returns the validated string
+	 */
 	public String validateConfirmation(String confirmationString, String originalString, String fieldName) {
 		return validateConfirmation(confirmationString, originalString, fieldName, false);
 	}
 	
+	/**
+	 * Validates that {@code confirmationString} is valid and that it is equal to {@code originalString}.
+	 * <p>
+	 * This method first calls {@link #sanityzeString(java.lang.String, boolean)}, with {@code confirmationString}.
+	 * Then it validates if {@code confirmationString} is identical to {@code originalString}.
+	 *
+	 * @param confirmationString String to be validated and confirmed
+	 * @param originalString Original string to match with {@code confirmationString}
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @param isPassword Determines if the string represents a password or not
+	 * @return Validated {@code confirmationString} on success. Adds a message to {@code errorMap} on failure, but still returns the validated string
+	 */
 	public String validateConfirmation(String confirmationString, String originalString, String fieldName, boolean isPassword) {
 		if ( isPassword )
 			logger.debug("Entering method validateConfirmation (********,********,"+fieldName+")");
@@ -204,6 +304,14 @@ public class Validator {
 		return confirmationString;
 	}
 	
+	/**
+	 * Transforms input {@code String} into boolean.
+	 * <p>
+	 * If the input string is null, false or empty, the {@code Boolean} value is set as false. For every other value, it is considered true.
+	 *
+	 * @param booleanValue String representing a boolean value
+	 * @return false for null, "false" or "". true for everything else
+	 */
 	public Boolean validateBoolean(String booleanValue) {
 		logger.debug("Entering method validateConfirmation ("+booleanValue+")");
 		if ( booleanValue != null && !booleanValue.equals("false") && !booleanValue.equals("") ) {
@@ -215,6 +323,16 @@ public class Validator {
 		}
 	}
 	
+	/**
+	 * Validates that input String is a valid gender.
+	 * <p>
+	 * This method first calls {@link #sanityzeString(java.lang.String)}.
+	 * Then it validates if the string represents male or female.
+	 *
+	 * @param gender String representing gender to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @return true for male ("male" or "1"), false for female (every other string) or null on failures
+	 */
 	public Boolean validateGender(String gender, String fieldName) {
 		logger.debug("Entering method validateGender ("+gender+","+fieldName+")");
 		logger.debug("Sanitize String.");
@@ -230,6 +348,11 @@ public class Validator {
 		
 	}
 
+	/**
+	 * Returns the {@link #errorMap} associated with this object.
+	 *
+	 * @return {@code errorMap}
+	 */
 	public HashMap getErrorMap() {
 		logger.debug("Entering method getErrorMap ()");
 		return errorMap;

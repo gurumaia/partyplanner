@@ -18,8 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- *
- * @author gustavo
+ * User table entity class.
  */
 @Entity
 @Table( name = "user" )

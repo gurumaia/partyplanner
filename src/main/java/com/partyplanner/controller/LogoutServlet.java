@@ -17,8 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author gustavo
+ * This {@code HttpServlet} logs out the user.
  */
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/Logout"})
 //@ServletSecurity(@HttpConstraint(rolesAllowed = "user"))
@@ -27,8 +26,9 @@ public class LogoutServlet extends HttpServlet {
 	private static final Logger logger = LogManager.getLogger(LogoutServlet.class.getName());
 
 	/**
-	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-	 * methods.
+	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+	 * <p>
+	 * Logs out the user.
 	 *
 	 * @param request servlet request
 	 * @param response servlet response
