@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration> 
-  <Appenders> 
-	<File name="FileLogger" fileName="HelloLog4j.log" append="false"> 
-      <PatternLayout pattern="[%d] [%-5p] [%X{user}] [%X{sessionId}] [%X{uuid}] [%t] [%c{1}] - %m%n"/> 
-      <!--<PatternLayout pattern="%highlight{[%d] [%p] [%t] [%c{1}] - %m%n}"/>--> 
-    </File>
-    <Console name="STDOUT" target="SYSTEM_OUT"> 
-      <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/> 
-    </Console> 
-  </Appenders> 
-  <Loggers>
-	<Root level="debug"> 
-		<AppenderRef ref="FileLogger"/> 
-	</Root> 
-  </Loggers> 
+<Configuration>
+	<Appenders>
+		<RollingRandomAccessFile name="RollingFileLogger" fileName="/partyplanner/logs/PartyPlanner.log" filePattern="/partyplanner/logs/PartyPlanner.%d{yyyy-MM-dd-HH}h.log.gz">
+			<PatternLayout pattern="[%d] [%-5p] [%X{user}] [%X{sessionId}] [%X{uuid}] [%t] [%c{1}] - %m%n"/>
+			<Policies>
+				<OnStartupTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="1GB" />
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		<DefaultRolloverStrategy max="999999999"/>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<AsyncLogger name="com.partyplanner" level="debug" includeLocation="false">
+			<AppenderRef ref="RollingFileLogger" />
+		</AsyncLogger>
+		<Root level="debug">
+			<!--<AppenderRef ref="RollingFileLogger" />-->
+		</Root>
+	</Loggers>
 </Configuration>
