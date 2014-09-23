@@ -388,6 +388,32 @@ public class ValidatorNGTest {
 	
 	/**
 	 * Test of validatePassword method, of class Validator.
+	 * Passing Long Password
+	 * Should return the password string and should have an error in the error map
+	 */
+	@Test
+	public void testValidatePassword_LongPassword() {
+		String expResult = "longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01longpassword01long";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
+
+		Validator instance = new Validator();
+		String result = instance.validatePassword(inputString, fieldName);
+		
+		System.out.println("testValidatePassword_LongPassword - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidatePassword_LongPassword - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validatePassword method, of class Validator.
 	 * Passing Password without numbers
 	 * Should return the password string and should have an error in the error map
 	 */
@@ -404,11 +430,11 @@ public class ValidatorNGTest {
 		Validator instance = new Validator();
 		String result = instance.validatePassword(inputString, fieldName);
 		
-		System.out.println("testValidatePassword_ShortPassword - Expected '"+expResult+"' and got '"+result+"'");
+		System.out.println("testValidatePassword_NoNumbers - Expected '"+expResult+"' and got '"+result+"'");
 		assertEquals(result, expResult);
 		
 		HashMap errorMap = instance.getErrorMap();
-		System.out.println("testValidatePassword_ShortPassword - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		System.out.println("testValidatePassword_NoNumbers - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
 		assertEquals(errorMap, expErrorMap);
 	}
 	
@@ -456,15 +482,380 @@ public class ValidatorNGTest {
 		Validator instance = new Validator();
 		String result = instance.validatePassword(inputString, fieldName);
 		
-		System.out.println("testValidatePassword_EmptyPassword - Expected '"+expResult+"' and got '"+result+"'");
+		System.out.println("testValidatePassword_NullPassword - Expected '"+expResult+"' and got '"+result+"'");
 		assertEquals(result, expResult);
 		
 		HashMap errorMap = instance.getErrorMap();
-		System.out.println("testValidatePassword_EmptyPassword - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		System.out.println("testValidatePassword_NullPassword - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="expanded" desc="validateNickname tests. Click on the + sign on the left to edit the code.">
+	/**
+	 * Test of validateNickname method, of class Validator.
+	 * Passing Perfect Input (Perfect NicknameString)
+	 * Should return the nickname string and shouldn't have anything in the Error Map
+	 */
+	@Test
+	public void testValidateNickname_PerfectInput() {
+		String expResult = "ThisIsANickname01_.-.";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+
+		Validator instance = new Validator();
+		String result = instance.validateNickname(inputString, fieldName);
+		
+		System.out.println("testValidateNickname_PerfectInput - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateNickname_PerfectInput - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of Nickname method, of class Validator.
+	 * Passing Short Nickname
+	 * Should return the Nickname string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateNickname_ShortNickname() {
+		String expResult = "ni";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid nickname. Must be between 3 and 32 characters and have only letters, numbers and _ (underline), - (dash), . (dot).");
+
+		Validator instance = new Validator();
+		String result = instance.validateNickname(inputString, fieldName);
+		
+		System.out.println("testValidateNickname_ShortNickname - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateNickname_ShortNickname - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of Nickname method, of class Validator.
+	 * Passing Long Nickname
+	 * Should return the Nickname string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateNickname_LongNickname() {
+		String expResult = "longnickname01longnickname01longn";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid nickname. Must be between 3 and 32 characters and have only letters, numbers and _ (underline), - (dash), . (dot).");
+
+		Validator instance = new Validator();
+		String result = instance.validateNickname(inputString, fieldName);
+		
+		System.out.println("testValidateNickname_LongNickname - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateNickname_LongNickname - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateNickname method, of class Validator.
+	 * Passing Nickname with unacceptable special chars
+	 * Should return the nickname string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateNickname_SpecialChars() {
+		String expResult = "thisisnotanickname!";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid nickname. Must be between 3 and 32 characters and have only letters, numbers and _ (underline), - (dash), . (dot).");
+
+		Validator instance = new Validator();
+		String result = instance.validateNickname(inputString, fieldName);
+		
+		System.out.println("testValidateNickname_SpecialChars - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateNickname_SpecialChars - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateNickname method, of class Validator.
+	 * Passing Empty Nickname
+	 * Should return the nickname string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateNickname_EmptyNickname() {
+		String expResult = "";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid nickname. Must be between 3 and 32 characters and have only letters, numbers and _ (underline), - (dash), . (dot).");
+
+		Validator instance = new Validator();
+		String result = instance.validateNickname(inputString, fieldName);
+		
+		System.out.println("testValidateNickname_EmptyNickname - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateNickname_EmptyNickname - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateNickname method, of class Validator.
+	 * Passing Null Nickname
+	 * Should return the nickname string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateNickname_NullNickname() {
+		String expResult = null;
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid nickname. Must be between 3 and 32 characters and have only letters, numbers and _ (underline), - (dash), . (dot).");
+
+		Validator instance = new Validator();
+		String result = instance.validateNickname(inputString, fieldName);
+		
+		System.out.println("testValidateNickname_NullNickname - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateNickname_NullNickname - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
 		assertEquals(errorMap, expErrorMap);
 	}
 	// </editor-fold>
 
+	// <editor-fold defaultstate="expanded" desc="validateName tests. Click on the + sign on the left to edit the code.">
+	/**
+	 * Test of validateName method, of class Validator.
+	 * Passing Perfect Input (Perfect NameString)
+	 * Should return the name string and shouldn't have anything in the Error Map
+	 */
+	@Test
+	public void testValidateName_PerfectInput() {
+		String expResult = "ThisIsAName";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, true);
+		
+		System.out.println("testValidateName_PerfectInput - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_PerfectInput - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateName method, of class Validator.
+	 * Passing Perfect Input (Perfect NameString) for a last name (empty string).
+	 * Should return the name string and shouldn't have anything in the Error Map.
+	 */
+	@Test
+	public void testValidateName_EmptyLastName() {
+		String expResult = "";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, false);
+		
+		System.out.println("testValidateName_EmptyLastName - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_EmptyLastName - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateName method, of class Validator.
+	 * Passing short last name.
+	 * Should return the name string and shouldn't have anything in the Error Map.
+	 */
+	@Test
+	public void testValidateName_ShortLastName() {
+		String expResult = "la";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid name. Must be between 3 and 35 characters and have only letters.");
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, false);
+		
+		System.out.println("testValidateName_ShortLastName - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_ShortLastName - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of Name method, of class Validator.
+	 * Passing Short Name
+	 * Should return the Name string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateName_ShortName() {
+		String expResult = "na";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid name. Must be between 3 and 35 characters and have only letters.");
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, true);
+		
+		System.out.println("testValidateName_ShortName - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_ShortName - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of Name method, of class Validator.
+	 * Passing Long Name
+	 * Should return the Name string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateName_LongName() {
+		String expResult = "longnamelongnamelongnamelongnamelong";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid name. Must be between 3 and 35 characters and have only letters.");
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, true);
+		
+		System.out.println("testValidateName_LongName - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_LongName - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateName method, of class Validator.
+	 * Passing Name with unacceptable special chars
+	 * Should return the name string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateName_SpecialChars() {
+		String expResult = "thisisnotaname01";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid name. Must be between 3 and 35 characters and have only letters.");
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, true);
+		
+		System.out.println("testValidateName_SpecialChars - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_SpecialChars - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateName method, of class Validator.
+	 * Passing Empty Name
+	 * Should return the name string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateName_EmptyName() {
+		String expResult = "";
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid name. Must be between 3 and 35 characters and have only letters.");
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, true);
+		
+		System.out.println("testValidateName_EmptyName - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_EmptyName - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	
+	/**
+	 * Test of validateName method, of class Validator.
+	 * Passing Null Name
+	 * Should return the name string and should have an error in the error map
+	 */
+	@Test
+	public void testValidateName_NullName() {
+		String expResult = null;
+		String inputString = expResult;
+		
+		String fieldName = "nickname";
+		
+		HashMap<String,String> expErrorMap = new HashMap<>();
+		expErrorMap.put(fieldName,"Nickname is not a valid name. Must be between 3 and 35 characters and have only letters.");
+
+		Validator instance = new Validator();
+		String result = instance.validateName(inputString, fieldName, true);
+		
+		System.out.println("testValidateName_NullName - Expected '"+expResult+"' and got '"+result+"'");
+		assertEquals(result, expResult);
+		
+		HashMap errorMap = instance.getErrorMap();
+		System.out.println("testValidateName_NullName - Expected '"+expErrorMap.toString()+"' and got '"+errorMap.toString()+"'");
+		assertEquals(errorMap, expErrorMap);
+	}
+	// </editor-fold>
+	
 	// <editor-fold defaultstate="expanded" desc="validateStringWithRegex tests. Click on the + sign on the left to edit the code.">
 	/**
 	 * Test of validateStringWithRegex method, of class Validator.
