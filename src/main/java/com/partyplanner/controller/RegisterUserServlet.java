@@ -134,9 +134,11 @@ public class RegisterUserServlet extends HttpServlet {
 	protected void parseInput(HttpServletRequest request) {
 		logger.debug("Entering method parseInput.");
 		Validator vdt = new Validator(messageBundle);
-		nickname = vdt.validateStringWithLength(request.getParameter("nickname"), "nickname", 3, 32 );
-		firstName = vdt.validateStringWithLength(request.getParameter("first_name"), "first_name", 3, 35 );
-		lastName = vdt.validateStringWithLength(request.getParameter("last_name"), "last_name", 0, 35 );
+		nickname = vdt.validateNickname(request.getParameter("nickname"), "nickname");
+//		firstName = vdt.validateStringWithLength(request.getParameter("first_name"), "first_name", 3, 35 );
+		firstName = vdt.validateName(request.getParameter("first_name"), "first_name",true);
+		lastName = vdt.validateName(request.getParameter("last_name"), "last_name",false);
+//		lastName = vdt.validateStringWithLength(request.getParameter("last_name"), "last_name", 0, 35 );
 		email = vdt.validateEmail( request.getParameter("email") , "email");
 		emailConfirmation = vdt.validateConfirmation(request.getParameter("email_confirmation"), email, "email_confirmation");
 		password = vdt.validatePassword(request.getParameter("password"), "password");

@@ -173,7 +173,7 @@ public class Validator {
 	/**
 	 * Validates that input is a valid password string.
 	 * <p>
-	 * This method first calls {@link #validateStringWithLength(java.lang.String, java.lang.String, int, int, boolean)} passing a {@code minLength} of 8, a {@code maxLength} of 255 and a {@code isPassword} of true.
+	 * This method first calls {@link #sanityzeString(java.lang.String, boolean) } passing a {@code isPassword} of true.
 	 * Then it validates that the string conforms to a password using a regular expression, through {@link #validateStringWithRegex(java.lang.String, java.lang.String, boolean)}.
 	 * On errors, adds a friendly message, retrieved from the internationalization {@link #messageBundle} to the {@link #errorMap}.
 	 * This method does NOT write the password string to the log files, even on DEBUG mode.
@@ -195,7 +195,7 @@ public class Validator {
 	public String validatePassword(String password, String fieldName) {
 		logger.debug("Entering method validatePassword.");
 		logger.debug("Validate password string.");
-		password = validateStringWithLength(password, fieldName, 8, 255, true);
+		password = sanityzeString(password, true);
 		logger.debug("Password string validated.");
 		
 //		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
@@ -207,6 +207,82 @@ public class Validator {
 		}
 		logger.debug("Password validation success.");
 		return password;
+	}
+	
+	/**
+	 * Validates that input is a valid nickname string.
+	 * <p>
+	 * This method first calls {@link #sanityzeString(java.lang.String)}.
+	 * Then it validates that the string conforms to a nickname using a regular expression, through {@link #validateStringWithRegex(java.lang.String, java.lang.String, boolean)}.
+	 * On errors, adds a friendly message, retrieved from the internationalization {@link #messageBundle} to the {@link #errorMap}.
+	 * <p>
+	 * Nickname rules:
+	 * <ul>
+	 * <li>Must be at least 3 characters long;
+	 * <li>Must be at max 32 characters long;
+	 * <li>Must have only letters, numbers and these special chars: _-.
+	 * </ul>
+	 * 
+	 * @param nickname String representing the nickname to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @return Validated String on success, null on failure
+	 */
+	public String validateNickname(String nickname, String fieldName) {
+		logger.debug("Entering method validateNickname("+nickname+","+fieldName+").");
+		logger.debug("Validate nickname string.");
+		nickname = sanityzeString(nickname);
+		logger.debug("Nickname string validated.");
+		
+//		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
+		if ( ! validateStringWithRegex(nickname, "^[a-zA-Z0-9-_.]{3,32}", false) ) {
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_nickname"), fieldString );
+			logger.info(msg);
+			errorMap.put(fieldName, msg);
+		}
+		logger.debug("Nickname validation success.");
+		return nickname;
+	}
+	
+	/**
+	 * Validates that input is a valid name string.
+	 * <p>
+	 * This method first calls {@link #sanityzeString(java.lang.String)}.
+	 * Then it validates that the string conforms to a name using a regular expression, through {@link #validateStringWithRegex(java.lang.String, java.lang.String, boolean)}.
+	 * On errors, adds a friendly message, retrieved from the internationalization {@link #messageBundle} to the {@link #errorMap}.
+	 * <p>
+	 * Naming rules:
+	 * <ul>
+	 * <li>Must be at least 3 characters long;
+	 * <li>Must be at max 35 characters long;
+	 * <li>Must have only letters
+	 * </ul>
+	 * 
+	 * @param name String representing the nickname to be validated
+	 * @param fieldName Field name to be used with {@code errorMap}
+	 * @param isFirstName Boolean telling if this is a firts name or not. If it's not a first name, accept empty values
+	 * @return Validated String on success, null on failure
+	 */
+	public String validateName(String name, String fieldName, boolean isFirstName) {
+		logger.debug("Entering method validateNickname("+name+","+fieldName+").");
+		logger.debug("Validate nickname string.");
+		name = sanityzeString(name);
+		logger.debug("Nickname string validated.");
+		
+		if ( ! isFirstName && name.isEmpty() ) {
+			logger.debug("Nickname validation success.");
+			return name;
+		}
+		
+//		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
+		if ( ! validateStringWithRegex(name, "^[a-zA-Z]{3,35}", false) ) {
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_name"), fieldString );
+			logger.info(msg);
+			errorMap.put(fieldName, msg);
+		}
+		logger.debug("Nickname validation success.");
+		return name;
 	}
 	
 	/**
