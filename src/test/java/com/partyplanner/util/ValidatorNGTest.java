@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import org.mockito.MockitoAnnotations;
 import static org.testng.Assert.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -23,10 +24,11 @@ import org.testng.annotations.Test;
 public class ValidatorNGTest {
 	
 	public ValidatorNGTest() {
+		
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public void setUpClass() throws Exception {
 	}
 
 	@AfterClass
@@ -97,7 +99,7 @@ public class ValidatorNGTest {
 		String expResult = "OnePerfectString1!2@3#4$5%6¨";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		int minLength = 1;
 		int maxLength = 100;
 		
@@ -124,12 +126,12 @@ public class ValidatorNGTest {
 		String expResult = "ShortString";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		int minLength = 15;
 		int maxLength = 100;
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put("test_field", fieldName+" must be between "+minLength+" and "+maxLength+" characters.");
+		expErrorMap.put("nickname", "Nickname must be between "+minLength+" and "+maxLength+" characters.");
 
 		Validator instance = new Validator();
 		String result = instance.validateStringWithLength(inputString, fieldName, minLength, maxLength, false);
@@ -152,12 +154,12 @@ public class ValidatorNGTest {
 		String expResult = "LongString";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		int minLength = 1;
 		int maxLength = 2;
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put("test_field", fieldName+" must be between "+minLength+" and "+maxLength+" characters.");
+		expErrorMap.put("nickname", "Nickname must be between "+minLength+" and "+maxLength+" characters.");
 
 		Validator instance = new Validator();
 		String result = instance.validateStringWithLength(inputString, fieldName, minLength, maxLength, false);
@@ -180,12 +182,12 @@ public class ValidatorNGTest {
 		String expResult = "";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		int minLength = 0;
 		int maxLength = 2;
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-//		expErrorMap.put("test_field", fieldName+" must be between "+minLength+" and "+maxLength+" characters.");
+//		expErrorMap.put("nickname", "Nickname must be between "+minLength+" and "+maxLength+" characters.");
 
 		Validator instance = new Validator();
 		String result = instance.validateStringWithLength(inputString, fieldName, minLength, maxLength, false);
@@ -208,12 +210,12 @@ public class ValidatorNGTest {
 		String expResult = null;
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		int minLength = 0;
 		int maxLength = 2;
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-//		expErrorMap.put("test_field", fieldName+" must be between "+minLength+" and "+maxLength+" characters.");
+//		expErrorMap.put("nickname", "Nickname must be between "+minLength+" and "+maxLength+" characters.");
 
 		Validator instance = new Validator();
 		String result = instance.validateStringWithLength(inputString, fieldName, minLength, maxLength, false);
@@ -238,7 +240,7 @@ public class ValidatorNGTest {
 		String expResult = "gurumaia@gmail.com";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -263,10 +265,10 @@ public class ValidatorNGTest {
 		String expResult = "gurumaiagmail.com";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName, fieldName+" is not a valid email.");
+		expErrorMap.put(fieldName, "Nickname is not a valid email.");
 
 		Validator instance = new Validator();
 		String result = instance.validateEmail(inputString, fieldName);
@@ -289,10 +291,10 @@ public class ValidatorNGTest {
 		String expResult = "";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName, fieldName+" is not a valid email.");
+		expErrorMap.put(fieldName, "Nickname is not a valid email.");
 
 		Validator instance = new Validator();
 		String result = instance.validateEmail(inputString, fieldName);
@@ -315,10 +317,10 @@ public class ValidatorNGTest {
 		String expResult = null;
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName, fieldName+" is not a valid email.");
+		expErrorMap.put(fieldName, "Nickname is not a valid email.");
 
 		Validator instance = new Validator();
 		String result = instance.validateEmail(inputString, fieldName);
@@ -343,7 +345,7 @@ public class ValidatorNGTest {
 		String expResult = "ThisIsAPassword0!";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -368,10 +370,10 @@ public class ValidatorNGTest {
 		String expResult = "nopas01";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
+		expErrorMap.put(fieldName,"Nickname is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
 
 		Validator instance = new Validator();
 		String result = instance.validatePassword(inputString, fieldName);
@@ -394,10 +396,10 @@ public class ValidatorNGTest {
 		String expResult = "thisisnotapassword";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
+		expErrorMap.put(fieldName,"Nickname is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
 
 		Validator instance = new Validator();
 		String result = instance.validatePassword(inputString, fieldName);
@@ -420,10 +422,10 @@ public class ValidatorNGTest {
 		String expResult = "";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
+		expErrorMap.put(fieldName,"Nickname is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
 
 		Validator instance = new Validator();
 		String result = instance.validatePassword(inputString, fieldName);
@@ -446,10 +448,10 @@ public class ValidatorNGTest {
 		String expResult = null;
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
+		expErrorMap.put(fieldName,"Nickname is not a valid password. Must include at least one letter and one number and be at least 8 characters long.");
 
 		Validator instance = new Validator();
 		String result = instance.validatePassword(inputString, fieldName);
@@ -586,7 +588,7 @@ public class ValidatorNGTest {
 		Date expResult = df.parse("2014-08-21");
 		String inputString = "2014-08-21";
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 		
@@ -612,10 +614,10 @@ public class ValidatorNGTest {
 		Date expResult = null;
 		String inputString = "2014-0821a";
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid date.");
+		expErrorMap.put(fieldName,"Nickname is not a valid date.");
 		
 		Validator instance = new Validator();
 		Date result = instance.validateDate(inputString, fieldName);
@@ -639,10 +641,10 @@ public class ValidatorNGTest {
 		Date expResult = null;
 		String inputString = "";
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid date.");
+		expErrorMap.put(fieldName,"Nickname is not a valid date.");
 		
 		Validator instance = new Validator();
 		Date result = instance.validateDate(inputString, fieldName);
@@ -666,10 +668,10 @@ public class ValidatorNGTest {
 		Date expResult = null;
 		String inputString = null;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid date.");
+		expErrorMap.put(fieldName,"Nickname is not a valid date.");
 		
 		Validator instance = new Validator();
 		Date result = instance.validateDate(inputString, fieldName);
@@ -695,7 +697,7 @@ public class ValidatorNGTest {
 		String originalString = expResult;
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -721,10 +723,12 @@ public class ValidatorNGTest {
 		String originalString = expResult+"a";
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
+		
+		MockitoAnnotations.initMocks(this);
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName, fieldName+" doesn't match.");
+		expErrorMap.put(fieldName, "Nickname doesn't match.");
 
 		Validator instance = new Validator();
 		String result = instance.validateConfirmation(inputString, originalString, fieldName);
@@ -748,7 +752,7 @@ public class ValidatorNGTest {
 		String originalString = expResult;
 		String inputString = expResult;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -774,7 +778,7 @@ public class ValidatorNGTest {
 		String originalString = null;
 		String inputString = originalString;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -800,7 +804,7 @@ public class ValidatorNGTest {
 		String originalString = expResult;
 		String inputString = null;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -914,7 +918,7 @@ public class ValidatorNGTest {
 		Boolean expResult = true;
 		String inputString = "male";
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -939,7 +943,7 @@ public class ValidatorNGTest {
 		Boolean expResult = false;
 		String inputString = "female";
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
 
@@ -964,10 +968,10 @@ public class ValidatorNGTest {
 		Boolean expResult = null;
 		String inputString = "";
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid gender.");
+		expErrorMap.put(fieldName,"Nickname is not a valid gender.");
 
 		Validator instance = new Validator();
 		Boolean result = instance.validateGender(inputString, fieldName);
@@ -990,10 +994,10 @@ public class ValidatorNGTest {
 		Boolean expResult = null;
 		String inputString = null;
 		
-		String fieldName = "test_field";
+		String fieldName = "nickname";
 		
 		HashMap<String,String> expErrorMap = new HashMap<>();
-		expErrorMap.put(fieldName,fieldName+" is not a valid gender.");
+		expErrorMap.put(fieldName,"Nickname is not a valid gender.");
 
 		Validator instance = new Validator();
 		Boolean result = instance.validateGender(inputString, fieldName);

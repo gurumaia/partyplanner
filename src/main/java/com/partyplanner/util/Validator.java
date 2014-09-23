@@ -131,7 +131,8 @@ public class Validator {
 		logger.debug("String sanitized.");
 		if (	( minLength > 0 && (tmpStr == null || tmpStr.isEmpty() || tmpStr.length() < minLength) ) ||
 				(tmpStr != null && tmpStr.length() > maxLength)) {
-			String msg = MessageFormat.format( messageBundle.getString("validator_string_with_length"), new Object[]{fieldName,minLength,maxLength} );
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_string_with_length"), new Object[]{fieldString,minLength,maxLength} );
 			if ( isPassword )
 				logger.info(msg+" (********)");
 			else
@@ -160,7 +161,8 @@ public class Validator {
 		logger.debug("Email string validated.");
 
 		if ( ! validateStringWithRegex(email, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,4}[a-z0-9])?", true) ) {
-			String msg = MessageFormat.format( messageBundle.getString("validator_email"), fieldName );
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_email"), fieldString );
 			logger.info(msg+" ("+email+")");
 			errorMap.put(fieldName, msg);
 		}
@@ -198,7 +200,8 @@ public class Validator {
 		
 //		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_\\-=+\\[\\]{},<.>;:\\/?\\\\|]).{8,255}", fieldName, false) ) {
 		if ( ! validateStringWithRegex(password, "^(?=.*\\d)(?=.*[a-z]).{8,255}", true) ) {
-			String msg = MessageFormat.format( messageBundle.getString("validator_password"), fieldName );
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_password"), fieldString );
 			logger.info(msg);
 			errorMap.put(fieldName, msg);
 		}
@@ -256,7 +259,8 @@ public class Validator {
 		try {
 			newDate = (Date) df.parse(date!=null?date:"");
 		} catch (ParseException ex) {
-			String msg = MessageFormat.format( messageBundle.getString("validator_date"),	fieldName );
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_date"), fieldString );
 			logger.info(msg+" ("+newDate+")");
 			errorMap.put(fieldName,msg);
 		}
@@ -299,7 +303,8 @@ public class Validator {
 		originalString = originalString == null ? "" : originalString;
 		logger.debug("String sanitized.");
 		if ( !confirmationString.equals(originalString) ) {
-			String msg = MessageFormat.format( messageBundle.getString("validator_confirmation"),	fieldName );
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_confirmation"), fieldString );
 			logger.info(msg+" ("+originalString+") vs ("+confirmationString+")");
 			errorMap.put(fieldName,msg);
 		}
@@ -341,7 +346,8 @@ public class Validator {
 		gender = sanityzeString(gender);
 		logger.debug("String sanitized.");
 		if (gender == null || gender.isEmpty()) {
-			String msg = MessageFormat.format( messageBundle.getString("validator_gender"),	fieldName );
+			String fieldString = messageBundle.getString("fields_"+fieldName);
+			String msg = MessageFormat.format( messageBundle.getString("validator_gender"),	fieldString );
 			logger.info(msg+" ("+gender+")");
 			errorMap.put(fieldName,msg);
 			return null;
