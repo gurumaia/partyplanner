@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 import javax.ejb.EJB;
@@ -30,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -74,15 +74,22 @@ public class GenericFilter implements Filter {
 		
 		// Is user logged in?
 		Boolean loggedIn;
-		loggedIn = (request.getRemoteUser() != null);
+		loggedIn = (request.getUserPrincipal() != null);
 		request.setAttribute("loggedIn",loggedIn);
-//		if (loggedIn) {
-//			try {
-//				request.setAttribute("userName", user.getFirstName(request.getRemoteUser()));
-//			} catch (Exception e) {
-//				logger.error("There was an unexpected error accessing the UserBean model",e);
-//			}
-//		}
+		if (loggedIn) {
+			logger.debug("User is logged in.");
+			HttpSession session = request.getSession();
+			if ( session.getAttribute("user_first_name") == null ) {
+				// User just logged in. Populate session.
+				logger.debug("User just logged in, session isn't populated. Populate now.");
+				try {
+					logger.debug("Set user first name");
+					session.setAttribute("user_first_name", user.getFirstName(request.getRemoteUser()));
+				} catch (Exception e) {
+					logger.error("There was an unexpected error accessing the UserBean model while populating the HttpSession",e);
+				}
+			}
+		}
 			
 		logger.debug("DoBeforeProcessing");
 	}	
