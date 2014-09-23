@@ -699,6 +699,7 @@ public class ValidatorNGTest {
 		assertEquals(errorMap, expErrorMap);
 	}
 	
+	
 	/**
 	 * Test of validateName method, of class Validator.
 	 * Passing short last name.
